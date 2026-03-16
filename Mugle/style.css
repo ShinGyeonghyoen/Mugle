@@ -1,0 +1,421 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  text-align: center;
+  padding: 40px;
+}
+
+.app {
+  max-width: 460px;
+  margin: auto;
+  background: white;
+  padding: 24px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  margin-bottom: 8px;
+  font-size: 48px;
+}
+
+p {
+  margin-top: 0;
+  color: #666;
+  font-size: 18px;
+}
+
+.message {
+  font-size: 18px;
+  margin: 18px 0 20px;
+  min-height: 28px;
+  font-weight: bold;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.filter-box {
+  background: #faf6ef;
+  border-radius: 16px;
+  padding: 16px;
+  margin: 16px 0 22px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.filter-group label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #5a4a38;
+}
+
+.filter-group select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d6c3a2;
+  font-size: 14px;
+  background: white;
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.menu-button {
+  padding: 16px 14px;
+  border: none;
+  border-radius: 18px;
+  font-size: 18px;
+  cursor: pointer;
+  background: #e8d6b8;
+  transition: background 0.2s ease, transform 0.15s ease;
+  line-height: 1.4;
+}
+
+.menu-button:hover {
+  background: #dfc9a5;
+}
+
+.menu-button:active {
+  transform: scale(0.98);
+}
+
+.jp-name {
+  display: block;
+  font-size: 14px;
+  color: #5f5246;
+  margin-top: 4px;
+}
+
+.result-box {
+  background: #fff4dd;
+  border: 2px solid #e0c28d;
+  border-radius: 18px;
+  padding: 18px 16px;
+  margin-bottom: 22px;
+}
+
+.result-label {
+  font-size: 14px;
+  color: #7a5a2b;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.result-menu {
+  font-size: 30px;
+  font-weight: 800;
+  color: #3e2c17;
+  margin-bottom: 6px;
+}
+
+.result-jp-name {
+  font-size: 16px;
+  color: #6a5844;
+}
+
+.action-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 14px 18px;
+  margin: 5px;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.primary {
+  background: #c78a4a;
+  color: white;
+}
+
+.secondary {
+  background: #eee;
+  color: #333;
+}
+
+.tertiary {
+  background: #5a4a38;
+  color: white;
+}
+
+/* Mogu character */
+
+.character {
+  position: relative;
+  width: 170px;
+  height: 170px;
+  margin: 18px auto 10px;
+}
+
+.tail {
+  position: absolute;
+  right: 8px;
+  bottom: 32px;
+  width: 54px;
+  height: 54px;
+  background: #9c6a3a;
+  border-radius: 50%;
+  z-index: 0;
+  border: 3px solid #2b2b2b;
+  overflow: hidden;
+}
+
+.tail::before,
+.tail::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+}
+
+.tail::before {
+  top: 15px;
+}
+
+.tail::after {
+  top: 30px;
+}
+
+.ear {
+  position: absolute;
+  top: 8px;
+  width: 30px;
+  height: 30px;
+  background: #9c6a3a;
+  border: 3px solid #2b2b2b;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.ear.left {
+  left: 34px;
+}
+
+.ear.right {
+  right: 34px;
+}
+
+.body {
+  position: absolute;
+  inset: 18px 20px 14px;
+  background: #c78a4a;
+  border: 3px solid #2b2b2b;
+  border-radius: 46% 46% 42% 42%;
+  z-index: 1;
+}
+
+.belly {
+  position: absolute;
+  left: 34px;
+  right: 34px;
+  bottom: 16px;
+  height: 58px;
+  background: #f6e3c6;
+  border: 3px solid #2b2b2b;
+  border-radius: 50%;
+}
+
+.eye-patch {
+  position: absolute;
+  top: 42px;
+  width: 34px;
+  height: 40px;
+  background: #4a352c;
+  border: 3px solid #2b2b2b;
+  border-radius: 50%;
+}
+
+.eye-patch.left {
+  left: 24px;
+}
+
+.eye-patch.right {
+  right: 24px;
+}
+
+.eye {
+  position: absolute;
+  top: 14px;
+  left: 11px;
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+}
+
+.eyebrow {
+  position: absolute;
+  top: 6px;
+  left: 5px;
+  width: 20px;
+  height: 3px;
+  background: transparent;
+  border-radius: 999px;
+}
+
+.nose {
+  position: absolute;
+  left: 50%;
+  top: 72px;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 10px;
+  background: #2b2b2b;
+  border-radius: 50%;
+}
+
+.mouth {
+  position: absolute;
+  left: 50%;
+  top: 90px;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 14px;
+  border-bottom: 4px solid #2b2b2b;
+  border-radius: 0 0 20px 20px;
+}
+
+.arm {
+  position: absolute;
+  top: 102px;
+  width: 22px;
+  height: 42px;
+  background: #9c6a3a;
+  border: 3px solid #2b2b2b;
+  border-radius: 18px;
+  z-index: 2;
+}
+
+.arm.left {
+  left: 16px;
+  transform: rotate(16deg);
+}
+
+.arm.right {
+  right: 16px;
+  transform: rotate(-16deg);
+}
+
+.leg {
+  position: absolute;
+  bottom: 0;
+  width: 26px;
+  height: 30px;
+  background: #9c6a3a;
+  border: 3px solid #2b2b2b;
+  border-radius: 16px;
+  z-index: 2;
+}
+
+.leg.left {
+  left: 46px;
+}
+
+.leg.right {
+  right: 46px;
+}
+
+/* mood states */
+
+.mood-happy .mouth {
+  width: 30px;
+  height: 14px;
+  border-bottom: 4px solid #2b2b2b;
+  border-top: none;
+  border-radius: 0 0 20px 20px;
+}
+
+.mood-thinking .mouth {
+  width: 22px;
+  height: 0;
+  top: 95px;
+  border-bottom: 4px solid #2b2b2b;
+  border-top: none;
+  border-radius: 0;
+}
+
+.mood-annoyed .mouth {
+  width: 24px;
+  height: 6px;
+  top: 94px;
+  transform: translateX(-50%) rotate(-8deg);
+  border-bottom: 4px solid #2b2b2b;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+}
+
+.mood-angry .mouth {
+  width: 24px;
+  height: 10px;
+  top: 97px;
+  border-bottom: none;
+  border-top: 4px solid #2b2b2b;
+  border-radius: 16px 16px 0 0;
+}
+
+.mood-sad .mouth {
+  width: 24px;
+  height: 10px;
+  top: 98px;
+  border-bottom: none;
+  border-top: 4px solid #2b2b2b;
+  border-radius: 16px 16px 0 0;
+}
+
+.mood-happy .eyebrow,
+.mood-thinking .eyebrow {
+  background: transparent;
+}
+
+.mood-annoyed .eye-patch.left .eyebrow {
+  background: #2b2b2b;
+  transform: rotate(8deg);
+}
+
+.mood-annoyed .eye-patch.right .eyebrow {
+  background: #2b2b2b;
+  transform: rotate(-8deg);
+}
+
+.mood-angry .eye-patch.left .eyebrow {
+  background: #2b2b2b;
+  transform: rotate(18deg);
+}
+
+.mood-angry .eye-patch.right .eyebrow {
+  background: #2b2b2b;
+  transform: rotate(-18deg);
+}
+
+.mood-sad .eye-patch.left .eyebrow {
+  background: #2b2b2b;
+  transform: rotate(-12deg);
+}
+
+.mood-sad .eye-patch.right .eyebrow {
+  background: #2b2b2b;
+  transform: rotate(12deg);
+}

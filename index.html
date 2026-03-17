@@ -10,6 +10,45 @@
   <link rel="stylesheet" href="./style.css?v=8" />
 </head>
 <body>
+  <!-- ☢ 지구멸망 버튼: 기존 기능과 분리된 독립 UI -->
+  <div id="doom-button-wrap" aria-hidden="false">
+    <button
+      id="doom-button"
+      type="button"
+      aria-label="지구멸망 버튼"
+      title="절대 누르지 마"
+    >
+      ☢
+    </button>
+    <div id="doom-tooltip" class="hidden"></div>
+  </div>
+
+  <!-- 지구멸망 경고 오버레이 -->
+  <div id="doom-overlay" class="doom-overlay hidden" aria-hidden="true">
+    <div class="doom-overlay__backdrop"></div>
+    <div class="doom-overlay__content">
+      <div id="doom-warning-text" class="doom-warning-text">WARNING</div>
+      <div id="doom-countdown" class="doom-countdown">3</div>
+      <div id="doom-subtext" class="doom-subtext">지구멸망 프로토콜 시작</div>
+    </div>
+  </div>
+
+  <!-- 강제 결정 결과 모달 -->
+  <div id="doom-result-modal" class="doom-result-modal hidden" aria-hidden="true">
+    <div class="doom-result-card">
+      <div class="doom-result-title">인류는 멸망하지 않았다</div>
+      <div class="doom-result-subtitle">하지만 네 선택권은 회수했다</div>
+
+      <div id="doom-result-emoji" class="doom-result-emoji">🍛</div>
+      <div id="doom-result-text" class="doom-result-text">오늘의 메뉴는 카레다</div>
+      <div id="doom-result-message" class="doom-result-message">감사한 줄 알아라</div>
+
+      <button id="doom-result-close" class="doom-result-close" type="button">
+        확인
+      </button>
+    </div>
+  </div>
+
   <div class="app-shell">
     <main class="app-card">
       <header class="app-header">

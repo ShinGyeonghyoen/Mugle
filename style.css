@@ -1,18 +1,12 @@
 :root {
   --bg-1: #fff8ef;
   --bg-2: #fffdf9;
-  --card: rgba(255, 255, 255, 0.94);
-  --line: #f3ddc2;
+  --card: rgba(255, 255, 255, 0.95);
   --brown-1: #6f4726;
   --brown-2: #9b7048;
-  --brown-3: #c89a6f;
   --orange-1: #ffb14d;
   --orange-2: #ff8d43;
-  --yellow-soft: #fff1b8;
-  --green-1: #8ac43f;
-  --green-2: #6aa52b;
   --pink-1: #ff8fb1;
-  --pink-2: #ffb9cd;
   --shadow: 0 14px 32px rgba(111, 71, 38, 0.12);
   --shadow-soft: 0 8px 20px rgba(111, 71, 38, 0.08);
 }
@@ -43,7 +37,7 @@ button {
   display: flex;
   justify-content: center;
   align-items: stretch;
-  padding: 20px 16px 28px;
+  padding: 14px 12px 18px;
 }
 
 .app-card {
@@ -53,30 +47,30 @@ button {
   border: 1px solid rgba(255, 238, 220, 0.8);
   border-radius: 28px;
   box-shadow: var(--shadow);
-  padding: 24px 18px 24px;
+  padding: 18px 16px 18px;
   backdrop-filter: blur(10px);
 }
 
 .app-header {
   text-align: center;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 
 .logo-badge {
-  width: 52px;
-  height: 52px;
-  margin: 0 auto 10px;
-  border-radius: 16px;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 8px;
+  border-radius: 14px;
   display: grid;
   place-items: center;
-  font-size: 26px;
+  font-size: 24px;
   background: linear-gradient(135deg, #ffe8b8 0%, #ffd18f 100%);
   box-shadow: 0 10px 18px rgba(255, 177, 77, 0.18);
 }
 
 .app-title {
   margin: 0;
-  font-size: 34px;
+  font-size: 32px;
   line-height: 1.1;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -84,8 +78,8 @@ button {
 }
 
 .app-subtitle {
-  margin: 8px 0 0;
-  font-size: 15px;
+  margin: 6px 0 0;
+  font-size: 14px;
   color: var(--brown-2);
 }
 
@@ -93,13 +87,13 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
 }
 
 .character-stage {
   position: relative;
-  width: 280px;
-  height: 280px;
+  width: 240px;
+  height: 220px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -107,8 +101,8 @@ button {
 
 .stage-glow {
   position: absolute;
-  width: 235px;
-  height: 235px;
+  width: 200px;
+  height: 200px;
   border-radius: 999px;
   background: radial-gradient(circle, #fff2a6 0%, #ffe5ad 58%, rgba(255, 255, 255, 0) 72%);
   animation: glowPulse 2.8s ease-in-out infinite;
@@ -117,7 +111,7 @@ button {
 .mogu-img {
   position: relative;
   z-index: 2;
-  width: 240px;
+  width: 185px;
   max-width: 100%;
   display: block;
   filter: drop-shadow(0 12px 18px rgba(111, 71, 38, 0.16));
@@ -131,28 +125,28 @@ button {
 }
 
 .deco-1 {
-  top: 28px;
-  left: 22px;
-  width: 14px;
-  height: 14px;
+  top: 20px;
+  left: 18px;
+  width: 12px;
+  height: 12px;
   background: #ffd55c;
   animation: floatTiny 2.4s ease-in-out infinite;
 }
 
 .deco-2 {
-  top: 56px;
-  right: 30px;
-  width: 10px;
-  height: 10px;
+  top: 46px;
+  right: 24px;
+  width: 9px;
+  height: 9px;
   background: #9ed8ff;
   animation: floatTiny 2.8s ease-in-out infinite 0.3s;
 }
 
 .deco-3 {
-  bottom: 50px;
-  right: 52px;
-  width: 12px;
-  height: 12px;
+  bottom: 36px;
+  right: 40px;
+  width: 10px;
+  height: 10px;
   background: #b8e26b;
   animation: floatTiny 3s ease-in-out infinite 0.5s;
 }
@@ -160,29 +154,33 @@ button {
 .speech-bubble {
   width: 100%;
   max-width: 330px;
+  min-height: 66px;
   background: #fffdfa;
   border: 2px solid #ffdba8;
-  border-radius: 24px;
-  padding: 14px 16px;
+  border-radius: 22px;
+  padding: 12px 14px;
   text-align: center;
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.45;
   color: var(--brown-1);
   box-shadow: var(--shadow-soft);
   animation: bubblePop 0.45s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mode-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  margin-top: 18px;
+  margin-top: 14px;
 }
 
 .mode-btn {
   border: 2px solid #ffd8a3;
   border-radius: 18px;
-  padding: 13px 12px;
+  padding: 12px 10px;
   background: #fff3df;
   color: var(--brown-1);
   font-size: 14px;
@@ -199,18 +197,21 @@ button {
 }
 
 .result-panel {
-  margin-top: 18px;
+  margin-top: 14px;
   background: linear-gradient(180deg, #fffaf3 0%, #ffffff 100%);
   border: 2px solid #ffe7c8;
   border-radius: 24px;
-  padding: 18px 16px;
+  padding: 16px 14px;
   text-align: center;
   box-shadow: var(--shadow-soft);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .result-panel.celebrate {
-  transform: scale(1.02);
+  transform: scale(1.01);
   box-shadow: 0 14px 28px rgba(255, 143, 177, 0.22);
   border-color: #ffc6d9;
 }
@@ -221,9 +222,17 @@ button {
   color: var(--brown-2);
 }
 
+.single-result-view,
+.triple-result-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .result-food {
   margin: 0;
-  font-size: 26px;
+  font-size: 24px;
   color: var(--brown-1);
   line-height: 1.2;
 }
@@ -232,28 +241,56 @@ button {
   margin: 8px 0 0;
   font-size: 14px;
   color: var(--brown-2);
-  line-height: 1.5;
+  line-height: 1.45;
+}
+
+.triple-guide {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: var(--brown-2);
+}
+
+.candidate-buttons {
+  display: grid;
+  gap: 10px;
+}
+
+.candidate-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 14px 12px;
+  background: linear-gradient(135deg, #fff0d8 0%, #ffe0b4 100%);
+  color: var(--brown-1);
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 14px rgba(111, 71, 38, 0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.candidate-btn:hover {
+  transform: translateY(-2px);
 }
 
 .chips-section {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   justify-content: center;
-  margin-top: 16px;
+  margin-top: 14px;
 }
 
 .chip-btn {
   border: none;
   border-radius: 999px;
-  padding: 10px 14px;
+  padding: 9px 12px;
   background: #fff2dc;
   color: #8a5f33;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   box-shadow: 0 6px 12px rgba(111, 71, 38, 0.08);
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  transition: transform 0.15s ease, background 0.15s ease;
 }
 
 .chip-btn:hover,
@@ -262,22 +299,21 @@ button {
   background: #ffe7bf;
 }
 
-.button-section,
-.install-section {
+.button-section {
   display: flex;
-  gap: 12px;
-  margin-top: 18px;
+  gap: 10px;
+  margin-top: 14px;
 }
 
 .btn {
   flex: 1;
   border: none;
   border-radius: 18px;
-  padding: 15px 14px;
-  font-size: 15px;
+  padding: 14px 12px;
+  font-size: 14px;
   font-weight: 800;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .btn:hover {
@@ -300,103 +336,8 @@ button {
   border: 2px solid #ffd8a3;
 }
 
-.btn-install {
-  color: #fff;
-  background: linear-gradient(135deg, var(--green-1) 0%, var(--green-2) 100%);
-  box-shadow: 0 10px 18px rgba(106, 165, 43, 0.25);
-}
-
-.candidate-section {
-  margin-top: 18px;
-  background: #fffdfa;
-  border: 2px dashed #ffd8a3;
-  border-radius: 24px;
-  padding: 16px;
-}
-
-.candidate-header h3 {
-  margin: 0;
-  font-size: 20px;
-}
-
-.candidate-header p {
-  margin: 6px 0 0;
-  color: var(--brown-2);
-  font-size: 14px;
-}
-
-.candidate-list {
-  display: grid;
-  gap: 12px;
-  margin-top: 14px;
-}
-
-.candidate-card {
-  background: #fff7eb;
-  border: 2px solid #ffe2ba;
-  border-radius: 18px;
-  padding: 14px;
-  text-align: left;
-  box-shadow: var(--shadow-soft);
-}
-
-.candidate-card h4 {
-  margin: 0 0 6px;
-  font-size: 18px;
-  color: var(--brown-1);
-}
-
-.candidate-card p {
-  margin: 0;
-  font-size: 13px;
-  color: var(--brown-2);
-  line-height: 1.5;
-}
-
-.candidate-action {
-  margin-top: 12px;
-}
-
-.pick-btn {
-  width: 100%;
-  border: none;
-  border-radius: 14px;
-  padding: 12px;
-  background: linear-gradient(135deg, #ffcf76 0%, #ffab63 100%);
-  color: #fff;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.celebration-section {
-  margin-top: 18px;
-  text-align: center;
-  background: linear-gradient(135deg, #fff0f5 0%, #fff8fb 100%);
-  border: 2px solid #ffd0e0;
-  border-radius: 24px;
-  padding: 16px;
-  animation: celebrationPop 0.5s ease;
-}
-
-.celebration-badge {
-  display: inline-block;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--pink-1) 0%, var(--pink-2) 100%);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.celebration-text {
-  margin: 12px 0 0;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--brown-1);
-}
-
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .bounce-float {
@@ -443,14 +384,8 @@ button {
 }
 
 @keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes thinkingTilt {
@@ -486,11 +421,6 @@ button {
   100% { transform: translateY(0) scale(1); }
 }
 
-@keyframes celebrationPop {
-  0% { transform: scale(0.94); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
 @keyframes floatTiny {
   0% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
@@ -498,30 +428,26 @@ button {
 }
 
 @media (max-width: 390px) {
-  .app-shell {
-    padding: 12px 10px 18px;
-  }
-
   .app-card {
-    padding: 18px 14px 20px;
+    padding: 16px 12px 16px;
     border-radius: 22px;
   }
 
   .character-stage {
-    width: 240px;
-    height: 240px;
+    width: 220px;
+    height: 200px;
   }
 
   .mogu-img {
-    width: 205px;
+    width: 170px;
   }
 
   .app-title {
-    font-size: 30px;
+    font-size: 29px;
   }
 
   .result-food {
-    font-size: 22px;
+    font-size: 21px;
   }
 
   .button-section {

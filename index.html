@@ -2,12 +2,18 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
   <title>Mugle</title>
-  <meta name="description" content="결정을 어려워하는 사람들을 위한 메뉴 추천 앱 Mugle" />
+  <meta
+    name="description"
+    content="결정을 어려워하는 사람들을 위한 메뉴 추천 앱 Mugle"
+  />
   <meta name="theme-color" content="#ffb14d" />
   <link rel="manifest" href="./manifest.json" />
-  <link rel="stylesheet" href="./style.css?v=11" />
+  <link rel="stylesheet" href="./style.css?v=12" />
 </head>
 <body>
   <!-- ☢ 지구멸망 버튼 -->
@@ -78,31 +84,44 @@
       </section>
 
       <section class="mode-section">
-        <button id="simpleModeBtn" class="mode-btn active" type="button">심플 모드</button>
-        <button id="tripleModeBtn" class="mode-btn" type="button">3개 후보 모드</button>
+        <button id="simpleModeBtn" class="mode-btn active" type="button">
+          심플 모드
+        </button>
+        <button id="tripleModeBtn" class="mode-btn" type="button">
+          3개 후보 모드
+        </button>
       </section>
 
       <section class="result-panel" id="resultPanel">
         <p class="result-label" id="resultLabel">오늘의 추천</p>
 
+        <!-- 싱글 결과 영역 -->
         <div id="singleResultView" class="single-result-view">
           <h2 class="result-food" id="foodName">모드를 선택하고 시작해보자</h2>
           <p class="result-desc" id="foodDesc">
             빠르게 하나 고르거나, 후보 3개 중에서 최종 선택할 수 있어.
           </p>
 
+          <!-- 싱글 결정 버튼 영역 -->
           <div id="singleDecisionWrap" class="single-decision-wrap hidden">
             <button id="confirmSingleBtn" class="btn btn-main" type="button">
               이걸로 결정
             </button>
+
+            <!-- 친구가 공유 링크로 들어왔을 때만 노출 예정 -->
+            <button id="seeOtherBtn" class="btn btn-sub hidden" type="button">
+              다른 후보 보기
+            </button>
           </div>
 
+          <!-- 싱글 공유 버튼 영역 -->
           <div id="singleShareWrap" class="share-link-wrap hidden">
             <button id="shareSingleBtn" class="share-link-btn" type="button">
               누가 좀 골라줘
             </button>
           </div>
 
+          <!-- 결과 전달 버튼 영역 -->
           <div id="relayResultWrap" class="single-decision-wrap hidden">
             <button id="relayResultBtn" class="btn btn-sub" type="button">
               결과 전달하기
@@ -110,8 +129,9 @@
           </div>
         </div>
 
+        <!-- 3개 후보 결과 영역 -->
         <div id="tripleResultView" class="triple-result-view hidden">
-          <p class="triple-guide">후보 3개 중 하나를 골라줘</p>
+          <p class="triple-guide" id="tripleGuide">후보 3개 중 하나를 골라줘</p>
           <div id="candidateButtons" class="candidate-buttons"></div>
 
           <div id="tripleShareWrap" class="share-link-wrap hidden">
@@ -123,11 +143,21 @@
       </section>
 
       <section class="chips-section">
-        <button class="chip-btn" data-category="든든하게" type="button">든든하게</button>
-        <button class="chip-btn" data-category="가볍게" type="button">가볍게</button>
-        <button class="chip-btn" data-category="한식" type="button">한식</button>
-        <button class="chip-btn" data-category="일식" type="button">일식</button>
-        <button class="chip-btn" data-category="양식" type="button">양식</button>
+        <button class="chip-btn" data-category="든든하게" type="button">
+          든든하게
+        </button>
+        <button class="chip-btn" data-category="가볍게" type="button">
+          가볍게
+        </button>
+        <button class="chip-btn" data-category="한식" type="button">
+          한식
+        </button>
+        <button class="chip-btn" data-category="일식" type="button">
+          일식
+        </button>
+        <button class="chip-btn" data-category="양식" type="button">
+          양식
+        </button>
       </section>
 
       <section class="button-section">
@@ -137,6 +167,6 @@
     </main>
   </div>
 
-  <script src="./app.js?v=13"></script>
+  <script src="./app.js?v=14"></script>
 </body>
 </html>

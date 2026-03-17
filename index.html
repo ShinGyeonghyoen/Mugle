@@ -11,8 +11,10 @@
     name="description"
     content="오늘 뭐 먹지? 모구가 메뉴를 추천해주는 Mugle 앱"
   />
-  <link rel="stylesheet" href="style.css" />
+  <meta name="theme-color" content="#ffb14d" />
+
   <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app-shell">
@@ -34,7 +36,7 @@
             id="moguCharacter"
             class="mogu-img bounce-float"
             src="images/mogu-main.png"
-            alt="Mogu main character"
+            alt="Mogu"
           />
         </div>
 
@@ -43,7 +45,7 @@
         </div>
       </section>
 
-      <section class="result-panel" id="resultPanel">
+      <section class="result-panel">
         <p class="result-label">오늘의 추천</p>
         <h2 class="result-food" id="foodName">추천 버튼을 눌러보자</h2>
         <p class="result-desc" id="foodDesc">
@@ -59,11 +61,13 @@
       </section>
 
       <section class="button-section">
-        <button id="thinkBtn" class="btn btn-sub" type="button">
-          메뉴 고민하기
-        </button>
-        <button id="searchBtn" class="btn btn-main" type="button">
-          추천 받기
+        <button id="thinkBtn" class="btn btn-sub" type="button">메뉴 고민하기</button>
+        <button id="searchBtn" class="btn btn-main" type="button">추천 받기</button>
+      </section>
+
+      <section class="install-section" id="installSection">
+        <button id="installBtn" class="btn btn-install" type="button" hidden>
+          앱 설치하기
         </button>
       </section>
     </main>

@@ -7,10 +7,10 @@
   <meta name="description" content="결정을 어려워하는 사람들을 위한 메뉴 추천 앱 Mugle" />
   <meta name="theme-color" content="#ffb14d" />
   <link rel="manifest" href="./manifest.json" />
-  <link rel="stylesheet" href="./style.css?v=8" />
+  <link rel="stylesheet" href="./style.css?v=9" />
 </head>
 <body>
-  <!-- ☢ 지구멸망 버튼: 기존 기능과 분리된 독립 UI -->
+  <!-- ☢ 지구멸망 버튼 -->
   <div id="doom-button-wrap" aria-hidden="false">
     <button
       id="doom-button"
@@ -39,7 +39,7 @@
       <div class="doom-result-title">인류는 멸망하지 않았다</div>
       <div class="doom-result-subtitle">하지만 네 선택권은 회수했다</div>
 
-      <div id="doom-result-emoji" class="doom-result-emoji">🍛</div>
+      <div id="doom-result-emoji" class="doom-result-emoji">☢</div>
       <div id="doom-result-text" class="doom-result-text">오늘의 메뉴는 카레다</div>
       <div id="doom-result-message" class="doom-result-message">감사한 줄 알아라</div>
 
@@ -90,6 +90,12 @@
           <p class="result-desc" id="foodDesc">
             빠르게 하나 고르거나, 후보 3개 중에서 최종 선택할 수 있어.
           </p>
+
+          <div id="singleDecisionWrap" class="single-decision-wrap hidden">
+            <button id="confirmSingleBtn" class="btn btn-main" type="button">
+              이걸로 결정
+            </button>
+          </div>
         </div>
 
         <div id="tripleResultView" class="triple-result-view hidden">
@@ -113,6 +119,6 @@
     </main>
   </div>
 
-  <script src="./app.js?v=9"></script>
+  <script src="./app.js?v=11"></script>
 </body>
 </html>

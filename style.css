@@ -313,6 +313,27 @@ button {
   transform: translateY(-2px);
 }
 
+.share-link-wrap {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.share-link-btn {
+  border: none;
+  background: transparent;
+  color: var(--brown-2);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.share-link-btn:hover {
+  color: var(--brown-1);
+  text-decoration: underline;
+}
+
 .chips-section {
   display: flex;
   flex-wrap: wrap;

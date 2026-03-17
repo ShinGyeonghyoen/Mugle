@@ -1,78 +1,33 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
-  <title>Mugle</title>
-  <meta
-    name="description"
-    content="오늘 뭐 먹지? 모구가 메뉴를 추천해주는 Mugle 앱"
-  />
-  <meta name="theme-color" content="#ffb14d" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css" />
+<title>Mugle</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
-  <div class="app-shell">
-    <main class="app-card">
-      <header class="app-header">
-        <div class="logo-badge">🍴</div>
-        <h1 class="app-title">Mugle</h1>
-        <p class="app-subtitle">오늘 뭐 먹지?</p>
-      </header>
 
-      <section class="hero-section">
-        <div class="character-stage">
-          <div class="stage-glow"></div>
-          <div class="float-deco deco-1"></div>
-          <div class="float-deco deco-2"></div>
-          <div class="float-deco deco-3"></div>
+<div class="container">
 
-          <img
-            id="moguCharacter"
-            class="mogu-img bounce-float"
-            src="images/mogu-main.png"
-            alt="Mogu"
-          />
-        </div>
+<h1>Mugle</h1>
 
-        <div class="speech-bubble" id="messageBubble">
-          모구가 오늘의 메뉴를 같이 찾아줄게!
-        </div>
-      </section>
+<img id="mogu" src="images/mogu-main.png" class="mogu">
 
-      <section class="result-panel">
-        <p class="result-label">오늘의 추천</p>
-        <h2 class="result-food" id="foodName">추천 버튼을 눌러보자</h2>
-        <p class="result-desc" id="foodDesc">
-          기분에 맞는 메뉴를 모구가 골라줄게.
-        </p>
-      </section>
+<p id="message">오늘 뭐 먹지?</p>
 
-      <section class="chips-section">
-        <button class="chip-btn" data-food="라멘" type="button">라멘</button>
-        <button class="chip-btn" data-food="카레" type="button">카레</button>
-        <button class="chip-btn" data-food="초밥" type="button">초밥</button>
-        <button class="chip-btn" data-food="햄버거" type="button">햄버거</button>
-      </section>
+<button onclick="recommendFood()">메뉴 추천</button>
 
-      <section class="button-section">
-        <button id="thinkBtn" class="btn btn-sub" type="button">메뉴 고민하기</button>
-        <button id="searchBtn" class="btn btn-main" type="button">추천 받기</button>
-      </section>
+<h2 id="food"></h2>
 
-      <section class="install-section" id="installSection">
-        <button id="installBtn" class="btn btn-install" type="button" hidden>
-          앱 설치하기
-        </button>
-      </section>
-    </main>
-  </div>
+</div>
 
-  <script src="app.js"></script>
+<script src="app.js"></script>
+
 </body>
 </html>

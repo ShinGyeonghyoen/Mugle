@@ -370,6 +370,243 @@ button {
   display: none !important;
 }
 
+/* =========================
+   Doom Button
+========================= */
+#doom-button-wrap {
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 9999;
+  width: 44px;
+  height: 44px;
+}
+
+#doom-button {
+  position: absolute;
+  top: 9px;
+  left: 9px;
+  width: 26px;
+  height: 26px;
+  border: 1px solid #7a1f1f;
+  border-radius: 999px;
+  background: #1a0f0f;
+  color: #ff4d4d;
+  font-size: 14px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow:
+    0 0 0 1px rgba(255, 77, 77, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.28);
+  opacity: 0.95;
+  transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+#doom-button:hover {
+  transform: scale(1.04);
+  opacity: 1;
+}
+
+#doom-button.is-pressing {
+  box-shadow:
+    0 0 0 3px rgba(255, 77, 77, 0.15),
+    0 0 18px rgba(255, 77, 77, 0.22);
+}
+
+#doom-button::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 77, 77, 0.08);
+  pointer-events: none;
+}
+
+#doom-button.progressing::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 77, 77, 0.55);
+  clip-path: inset(0 calc(100% - var(--press-progress, 0%)) 0 0);
+  transition: clip-path 0.05s linear;
+  pointer-events: none;
+}
+
+#doom-tooltip {
+  position: absolute;
+  top: 42px;
+  left: 0;
+  min-width: 130px;
+  max-width: 180px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(20, 12, 12, 0.96);
+  color: #f8d8d8;
+  font-size: 12px;
+  line-height: 1.4;
+  border: 1px solid rgba(255, 77, 77, 0.25);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
+  white-space: normal;
+}
+
+/* =========================
+   Doom Overlay
+========================= */
+.doom-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+}
+
+.doom-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(14, 6, 6, 0.72);
+  backdrop-filter: blur(3px);
+}
+
+.doom-overlay__content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 24px;
+}
+
+.doom-warning-text {
+  font-size: 14px;
+  letter-spacing: 0.24em;
+  color: #ff7a7a;
+  margin-bottom: 12px;
+  animation: dangerBlink 0.6s infinite;
+}
+
+.doom-countdown {
+  font-size: clamp(64px, 16vw, 120px);
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 0 24px rgba(255, 77, 77, 0.28);
+  margin-bottom: 8px;
+}
+
+.doom-subtext {
+  font-size: 14px;
+  color: #f3c7c7;
+}
+
+/* =========================
+   Result Modal
+========================= */
+.doom-result-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(12, 8, 8, 0.68);
+  backdrop-filter: blur(4px);
+}
+
+.doom-result-card {
+  width: min(92vw, 360px);
+  border-radius: 22px;
+  padding: 24px 20px 20px;
+  text-align: center;
+  background: linear-gradient(180deg, #fff7f7 0%, #ffecec 100%);
+  border: 1px solid rgba(122, 31, 31, 0.15);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.2);
+  animation: resultPop 0.28s ease;
+}
+
+.doom-result-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #4a1b1b;
+}
+
+.doom-result-subtitle {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #7c4a4a;
+}
+
+.doom-result-emoji {
+  margin-top: 18px;
+  font-size: 48px;
+}
+
+.doom-result-text {
+  margin-top: 10px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #2f1a1a;
+}
+
+.doom-result-message {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #6a3434;
+  line-height: 1.5;
+}
+
+.doom-result-close {
+  margin-top: 18px;
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #351717;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.doom-result-close:hover {
+  opacity: 0.94;
+}
+
+/* =========================
+   Hint Bubble
+========================= */
+#mog-hint-bubble {
+  position: fixed;
+  left: 16px;
+  top: 60px;
+  z-index: 9998;
+  max-width: 220px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 248, 248, 0.97);
+  color: #4d2b2b;
+  border: 1px solid rgba(122, 31, 31, 0.12);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  font-size: 12px;
+  line-height: 1.5;
+  animation: resultPop 0.18s ease;
+}
+
+body.doom-shaking {
+  animation: screenShake 0.28s linear 2;
+}
+
+.doom-selected {
+  outline: 3px solid rgba(255, 77, 77, 0.45);
+  box-shadow: 0 8px 24px rgba(255, 77, 77, 0.18);
+  transform: scale(1.02);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, outline 0.18s ease;
+}
+
 @keyframes glowPulse {
   0% { transform: scale(1); opacity: 0.86; }
   50% { transform: scale(1.05); opacity: 1; }
@@ -394,6 +631,31 @@ button {
   0% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
   100% { transform: translateY(0); }
+}
+
+@keyframes dangerBlink {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+@keyframes screenShake {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-2px, 0px); }
+  80% { transform: translate(2px, 1px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes resultPop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @media (max-width: 390px) {
@@ -421,5 +683,15 @@ button {
 
   .button-section {
     flex-direction: column;
+  }
+
+  #doom-button-wrap {
+    top: 12px;
+    left: 12px;
+  }
+
+  #doom-tooltip {
+    min-width: 120px;
+    font-size: 11px;
   }
 }

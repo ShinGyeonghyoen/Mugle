@@ -274,6 +274,17 @@ button {
   color: var(--brown-2);
 }
 
+.single-decision-wrap {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+}
+
+#confirmSingleBtn {
+  width: 100%;
+  max-width: 220px;
+}
+
 .triple-guide {
   margin: 0 0 10px;
   font-size: 14px;

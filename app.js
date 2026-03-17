@@ -5,41 +5,20 @@ const foodDesc = document.getElementById("foodDesc");
 const thinkBtn = document.getElementById("thinkBtn");
 const searchBtn = document.getElementById("searchBtn");
 const chipButtons = document.querySelectorAll(".chip-btn");
+const installBtn = document.getElementById("installBtn");
 
 const menus = [
-  {
-    name: "라멘",
-    desc: "따뜻하고 진한 국물로 만족감이 높은 메뉴야."
-  },
-  {
-    name: "카레라이스",
-    desc: "든든하게 배를 채우고 싶을 때 잘 어울려."
-  },
-  {
-    name: "초밥",
-    desc: "조금 더 깔끔하고 가볍게 먹고 싶다면 좋아."
-  },
-  {
-    name: "햄버거",
-    desc: "기분 전환하고 싶을 때 만족도가 높은 선택이야."
-  },
-  {
-    name: "돈카츠",
-    desc: "바삭한 식감과 든든함이 필요할 때 추천해."
-  },
-  {
-    name: "오므라이스",
-    desc: "부드럽고 편안한 한 끼가 생각날 때 좋아."
-  },
-  {
-    name: "우동",
-    desc: "부담 없이 따뜻하게 먹고 싶을 때 잘 맞아."
-  },
-  {
-    name: "파스타",
-    desc: "조금 분위기 있게 먹고 싶을 때 괜찮은 선택이야."
-  }
+  { name: "라멘", desc: "따뜻하고 진한 국물로 만족감이 높은 메뉴야." },
+  { name: "카레라이스", desc: "든든하게 배를 채우고 싶을 때 잘 어울려." },
+  { name: "초밥", desc: "조금 더 깔끔하고 가볍게 먹고 싶다면 좋아." },
+  { name: "햄버거", desc: "기분 전환하고 싶을 때 만족도가 높은 선택이야." },
+  { name: "돈카츠", desc: "바삭한 식감과 든든함이 필요할 때 추천해." },
+  { name: "오므라이스", desc: "부드럽고 편안한 한 끼가 생각날 때 좋아." },
+  { name: "우동", desc: "부담 없이 따뜻하게 먹고 싶을 때 잘 맞아." },
+  { name: "파스타", desc: "조금 분위기 있게 먹고 싶을 때 괜찮은 선택이야." }
 ];
+
+let deferredPrompt = null;
 
 function clearCharacterAnimations() {
   moguCharacter.classList.remove(
@@ -135,6 +114,27 @@ chipButtons.forEach((button) => {
   });
 });
 
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.hidden = false;
+});
+
+installBtn.addEventListener("click", async () => {
+  if (!deferredPrompt) return;
+
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  installBtn.hidden = true;
+});
+
 window.addEventListener("load", () => {
   setMainState();
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./service-worker.js").catch((error) => {
+      console.error("Service Worker registration failed:", error);
+    });
+  }
 });

@@ -280,7 +280,8 @@ button {
   justify-content: center;
 }
 
-#confirmSingleBtn {
+#confirmSingleBtn,
+#relayResultBtn {
   width: 100%;
   max-width: 220px;
 }

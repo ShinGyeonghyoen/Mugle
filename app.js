@@ -17,6 +17,9 @@ const singleResultView = document.getElementById("singleResultView");
 const tripleResultView = document.getElementById("tripleResultView");
 const candidateButtons = document.getElementById("candidateButtons");
 
+const confirmSingleBtn = document.getElementById("confirmSingleBtn");
+const singleDecisionWrap = document.getElementById("singleDecisionWrap");
+
 /* =========================
    Doom Button Elements
 ========================= */
@@ -135,6 +138,18 @@ function showTripleView() {
   tripleResultView.classList.remove("hidden");
 }
 
+function hideSingleDecisionButton() {
+  if (singleDecisionWrap) {
+    singleDecisionWrap.classList.add("hidden");
+  }
+}
+
+function showSingleDecisionButton() {
+  if (singleDecisionWrap && currentMode === "simple" && currentSimpleMenu) {
+    singleDecisionWrap.classList.remove("hidden");
+  }
+}
+
 function clearCelebrateStyle() {
   resultPanel.classList.remove("celebrate");
 }
@@ -147,6 +162,7 @@ function clearCandidateHighlight() {
 function setMainState() {
   clearCelebrateStyle();
   showSingleView();
+  hideSingleDecisionButton();
   setCharacter("images/mogu-main.png", "오늘도 결정이 어렵지? 모구가 도와줄게!");
   resultLabel.textContent = "오늘의 추천";
   foodName.textContent = "모드를 선택하고 시작해보자";
@@ -158,6 +174,7 @@ function setMainState() {
 function setThinkingState() {
   clearCelebrateStyle();
   showSingleView();
+  hideSingleDecisionButton();
   setCharacter("images/mogu-thinking.png", "음... 오늘은 뭘 먹을까? 같이 좁혀보자!");
   resultLabel.textContent = "고민 중";
   foodName.textContent = "메뉴 고민 중";
@@ -167,6 +184,7 @@ function setThinkingState() {
 function setLoadingState(customMessage = "모구가 직장인 맞춤 메뉴를 열심히 찾는 중이야!") {
   clearCelebrateStyle();
   showSingleView();
+  hideSingleDecisionButton();
   setCharacter("images/mogu-loading.png", customMessage);
   resultLabel.textContent = "검색 중";
   foodName.textContent = "추천 준비 중...";
@@ -182,11 +200,13 @@ function setRecommendState(menu, annoyedText = null) {
   foodDesc.textContent = menu.desc;
   currentSimpleMenu = menu;
   currentTripleCandidates = [];
+  showSingleDecisionButton();
 }
 
 function setTripleCandidates(candidateMenus, annoyedText = null) {
   clearCelebrateStyle();
   showTripleView();
+  hideSingleDecisionButton();
   setCharacter("images/mogu-recommend.png", annoyedText || "좋아, 고민하기 좋게 후보 3개를 준비했어!");
   resultLabel.textContent = "후보 3개";
   candidateButtons.innerHTML = "";
@@ -207,6 +227,7 @@ function setTripleCandidates(candidateMenus, annoyedText = null) {
 function finalizeSelection(menu) {
   showSingleView();
   resultPanel.classList.add("celebrate");
+  hideSingleDecisionButton();
   setCharacter("images/mogu-celebrate.png", `${menu.name}, 최종 결정 완료! 이제 맛있게 먹기만 하면 돼!`);
   resultLabel.textContent = "최종 선택";
   foodName.textContent = `오늘의 메뉴는 ${menu.name} 입니다`;
@@ -281,6 +302,7 @@ function activateMode(mode) {
 
   clearCelebrateStyle();
   showSingleView();
+  hideSingleDecisionButton();
   resultLabel.textContent = "모드 변경";
   foodName.textContent = mode === "simple" ? "심플 모드 선택됨" : "3개 후보 모드 선택됨";
   foodDesc.textContent = mode === "simple"
@@ -307,6 +329,7 @@ function activateCategory(category) {
 
   showSingleView();
   clearCelebrateStyle();
+  hideSingleDecisionButton();
   setCharacter("images/mogu-thinking.png", `${selectedCategory} 느낌으로 후보를 좁혀볼게!`);
   resultLabel.textContent = "조건 선택";
   foodName.textContent = selectedCategory;
@@ -474,10 +497,10 @@ async function startDoomDecision() {
 
   if (currentMode === "triple" && currentTripleCandidates.length > 0) {
     highlightForcedCandidate(targetMenu);
-
     await wait(220);
 
     showSingleView();
+    hideSingleDecisionButton();
     resultPanel.classList.add("celebrate");
     setCharacter("images/mogu-celebrate.png", `인류는 멸망하지 않았다. 하지만 오늘은 ${targetMenu.name}다.`);
     resultLabel.textContent = "강제 결정 완료";
@@ -491,6 +514,7 @@ async function startDoomDecision() {
     return;
   }
 
+  hideSingleDecisionButton();
   resultPanel.classList.add("celebrate");
   setCharacter("images/mogu-celebrate.png", `드디어 결정을 포기했군. 오늘은 ${targetMenu.name}다.`);
   resultLabel.textContent = "강제 결정 완료";
@@ -571,6 +595,7 @@ searchBtn.addEventListener("click", () => {
 
   if (filteredMenus.length === 0) {
     showSingleView();
+    hideSingleDecisionButton();
     setCharacter("images/mogu-thinking.png", "조건에 맞는 메뉴가 없네. 다른 조건으로 다시 골라보자!");
     resultLabel.textContent = "조건 재설정";
     foodName.textContent = "메뉴 없음";
@@ -608,6 +633,14 @@ chipButtons.forEach((button) => {
     activateCategory(button.dataset.category);
   });
 });
+
+if (confirmSingleBtn) {
+  confirmSingleBtn.addEventListener("click", () => {
+    if (currentSimpleMenu) {
+      finalizeSelection(currentSimpleMenu);
+    }
+  });
+}
 
 window.addEventListener("load", () => {
   setMainState();

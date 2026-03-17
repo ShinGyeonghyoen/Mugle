@@ -1,79 +1,425 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Mugle</title>
-  <meta name="description" content="결정을 어려워하는 사람들을 위한 메뉴 추천 앱 Mugle" />
-  <meta name="theme-color" content="#ffb14d" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="app-shell">
-    <main class="app-card">
-      <header class="app-header">
-        <div class="logo-badge">🍴</div>
-        <h1 class="app-title">Mugle</h1>
-        <p class="app-subtitle">결정 못 할 때, 모구가 골라줄게</p>
-      </header>
+:root {
+  --bg-1: #fff8ef;
+  --bg-2: #fffdf9;
+  --card: rgba(255, 255, 255, 0.96);
+  --brown-1: #6f4726;
+  --brown-2: #9b7048;
+  --brown-3: #c58d5b;
+  --orange-1: #ffb14d;
+  --orange-2: #ff8d43;
+  --line: #f1c98f;
+  --shadow: 0 18px 40px rgba(111, 71, 38, 0.12);
+  --shadow-soft: 0 8px 22px rgba(111, 71, 38, 0.08);
+}
 
-      <section class="hero-section">
-        <div class="character-stage">
-          <div class="stage-glow"></div>
-          <div class="float-deco deco-1"></div>
-          <div class="float-deco deco-2"></div>
-          <div class="float-deco deco-3"></div>
+* {
+  box-sizing: border-box;
+}
 
-          <img
-            id="moguCharacter"
-            class="mogu-img"
-            src="images/mogu-main.png"
-            alt="Mogu"
-          />
-        </div>
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
 
-        <div class="speech-bubble" id="messageBubble">
-          오늘도 결정이 어렵지? 모구가 도와줄게!
-        </div>
-      </section>
+body {
+  font-family: Arial, "Hiragino Sans", "Noto Sans KR", sans-serif;
+  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+  color: var(--brown-1);
+}
 
-      <section class="mode-section">
-        <button id="simpleModeBtn" class="mode-btn active" type="button">심플 모드</button>
-        <button id="tripleModeBtn" class="mode-btn" type="button">3개 후보 모드</button>
-      </section>
+button {
+  font: inherit;
+}
 
-      <section class="result-panel" id="resultPanel">
-        <p class="result-label" id="resultLabel">오늘의 추천</p>
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 18px 12px 24px;
+}
 
-        <div id="singleResultView" class="single-result-view">
-          <h2 class="result-food" id="foodName">모드를 선택하고 시작해보자</h2>
-          <p class="result-desc" id="foodDesc">
-            빠르게 하나 고르거나, 후보 3개 중에서 최종 선택할 수 있어.
-          </p>
-        </div>
+.app-card {
+  width: 100%;
+  max-width: 430px;
+  background: var(--card);
+  border: 1px solid rgba(255, 235, 208, 0.95);
+  border-radius: 30px;
+  box-shadow: var(--shadow);
+  padding: 20px 16px 22px;
+}
 
-        <div id="tripleResultView" class="triple-result-view hidden">
-          <p class="triple-guide">후보 3개 중 하나를 골라줘</p>
-          <div id="candidateButtons" class="candidate-buttons"></div>
-        </div>
-      </section>
+.app-header {
+  text-align: center;
+  margin-bottom: 12px;
+}
 
-      <section class="chips-section">
-        <button class="chip-btn" data-category="든든하게" type="button">든든하게</button>
-        <button class="chip-btn" data-category="가볍게" type="button">가볍게</button>
-        <button class="chip-btn" data-category="한식" type="button">한식</button>
-        <button class="chip-btn" data-category="일식" type="button">일식</button>
-        <button class="chip-btn" data-category="양식" type="button">양식</button>
-      </section>
+.logo-badge {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 10px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  background: linear-gradient(135deg, #ffe6b4 0%, #ffd08a 100%);
+  box-shadow: 0 8px 18px rgba(255, 177, 77, 0.2);
+}
 
-      <section class="button-section">
-        <button id="thinkBtn" class="btn btn-sub" type="button">고민 시작</button>
-        <button id="searchBtn" class="btn btn-main" type="button">추천 받기</button>
-      </section>
-    </main>
-  </div>
+.app-title {
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.1;
+  font-weight: 800;
+  color: var(--brown-1);
+  letter-spacing: -0.03em;
+}
 
-  <script src="app.js"></script>
-</body>
-</html>
+.app-subtitle {
+  margin: 8px 0 0;
+  font-size: 15px;
+  color: var(--brown-3);
+}
+
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.character-stage {
+  position: relative;
+  width: 240px;
+  height: 210px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.character-stage::before {
+  content: "";
+  position: absolute;
+  bottom: 22px;
+  width: 150px;
+  height: 24px;
+  border-radius: 999px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(120, 80, 30, 0.18) 0%,
+    rgba(120, 80, 30, 0.08) 45%,
+    rgba(120, 80, 30, 0) 75%
+  );
+  filter: blur(7px);
+  animation: shadowBreath 2.8s ease-in-out infinite;
+  z-index: 0;
+}
+
+.stage-glow {
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 241, 184, 0.95) 0%,
+    rgba(255, 229, 173, 0.55) 45%,
+    rgba(255, 229, 173, 0.15) 62%,
+    rgba(255, 255, 255, 0) 78%
+  );
+  filter: blur(2px);
+  animation: glowPulse 3.2s ease-in-out infinite;
+  z-index: 0;
+}
+
+.mogu-img {
+  position: relative;
+  z-index: 2;
+  width: 180px;
+  max-width: 100%;
+  display: block;
+  object-fit: contain;
+  border-radius: 26px;
+  padding: 6px;
+  background: linear-gradient(180deg, #fffaf1 0%, #fff7eb 100%);
+  filter:
+    drop-shadow(0 12px 20px rgba(111, 71, 38, 0.10))
+    drop-shadow(0 4px 10px rgba(111, 71, 38, 0.06));
+  animation: moguFloat 2.8s ease-in-out infinite;
+}
+
+.float-deco {
+  position: absolute;
+  z-index: 1;
+  border-radius: 999px;
+  opacity: 0.95;
+}
+
+.deco-1 {
+  top: 24px;
+  left: 24px;
+  width: 14px;
+  height: 14px;
+  background: #f6c650;
+  animation: floatTiny 2.8s ease-in-out infinite;
+}
+
+.deco-2 {
+  top: 48px;
+  right: 30px;
+  width: 10px;
+  height: 10px;
+  background: #91cfff;
+  animation: floatTiny 3.2s ease-in-out infinite 0.4s;
+}
+
+.deco-3 {
+  bottom: 36px;
+  right: 46px;
+  width: 11px;
+  height: 11px;
+  background: #b7e26d;
+  animation: floatTiny 3.5s ease-in-out infinite 0.7s;
+}
+
+.speech-bubble {
+  width: 100%;
+  max-width: 330px;
+  min-height: 66px;
+  padding: 12px 16px;
+  border: 3px solid #f1c98f;
+  border-radius: 24px;
+  background: rgba(255, 253, 250, 0.96);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--brown-1);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.mode-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.mode-btn {
+  border: 2px solid #ffd8a3;
+  border-radius: 18px;
+  padding: 12px 10px;
+  background: #fff3df;
+  color: var(--brown-1);
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.mode-btn.active {
+  background: linear-gradient(135deg, var(--orange-1) 0%, var(--orange-2) 100%);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 10px 18px rgba(255, 141, 67, 0.22);
+}
+
+.result-panel {
+  margin-top: 16px;
+  min-height: 220px;
+  padding: 18px 16px;
+  border: 2px solid #f4d6ab;
+  border-radius: 26px;
+  background: linear-gradient(180deg, #fffaf3 0%, #ffffff 100%);
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.result-panel.celebrate {
+  border-color: #ffc6d9;
+  box-shadow: 0 14px 28px rgba(255, 143, 177, 0.22);
+}
+
+.result-label {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--brown-3);
+}
+
+.single-result-view,
+.triple-result-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.result-food {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.3;
+  color: var(--brown-1);
+  font-weight: 800;
+}
+
+.result-desc {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--brown-2);
+}
+
+.triple-guide {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: var(--brown-2);
+}
+
+.candidate-buttons {
+  display: grid;
+  gap: 10px;
+}
+
+.candidate-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 14px 12px;
+  background: linear-gradient(135deg, #fff0d8 0%, #ffe0b4 100%);
+  color: var(--brown-1);
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 14px rgba(111, 71, 38, 0.08);
+  transition: 0.15s ease;
+}
+
+.candidate-btn:hover {
+  transform: translateY(-2px);
+}
+
+.chips-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.chip-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 9px 12px;
+  background: #fff2dc;
+  color: #8a5f33;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 6px 12px rgba(111, 71, 38, 0.08);
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.chip-btn:hover,
+.chip-btn.active {
+  transform: translateY(-2px);
+  background: #ffe7bf;
+}
+
+.button-section {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.btn {
+  flex: 1;
+  border: none;
+  border-radius: 18px;
+  padding: 14px 12px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-main {
+  color: #fff;
+  background: linear-gradient(135deg, var(--orange-1) 0%, var(--orange-2) 100%);
+  box-shadow: 0 10px 18px rgba(255, 141, 67, 0.28);
+}
+
+.btn-sub {
+  color: var(--brown-1);
+  background: #fff3df;
+  border: 2px solid #ffd8a3;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@keyframes glowPulse {
+  0% { transform: scale(1); opacity: 0.86; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.86; }
+}
+
+@keyframes moguFloat {
+  0% { transform: translateY(0) scale(1); }
+  25% { transform: translateY(-6px) scale(1.01); }
+  50% { transform: translateY(0) scale(1.02); }
+  75% { transform: translateY(-3px) scale(1.01); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@keyframes shadowBreath {
+  0% { transform: scaleX(1); opacity: 0.75; }
+  50% { transform: scaleX(0.92); opacity: 0.52; }
+  100% { transform: scaleX(1); opacity: 0.75; }
+}
+
+@keyframes floatTiny {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+@media (max-width: 390px) {
+  .app-card {
+    padding: 18px 12px 20px;
+    border-radius: 24px;
+  }
+
+  .app-title {
+    font-size: 30px;
+  }
+
+  .character-stage {
+    width: 220px;
+    height: 200px;
+  }
+
+  .mogu-img {
+    width: 168px;
+  }
+
+  .result-food {
+    font-size: 20px;
+  }
+
+  .button-section {
+    flex-direction: column;
+  }
+}

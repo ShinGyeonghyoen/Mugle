@@ -1,179 +1,140 @@
-import { menus } from "./data/menus.js";
-import { moguStates } from "./characters/mogu.js";
+const moguCharacter = document.getElementById("moguCharacter");
+const messageBubble = document.getElementById("messageBubble");
+const foodName = document.getElementById("foodName");
+const foodDesc = document.getElementById("foodDesc");
+const thinkBtn = document.getElementById("thinkBtn");
+const searchBtn = document.getElementById("searchBtn");
+const chipButtons = document.querySelectorAll(".chip-btn");
 
-let skipCount = 0;
-let isResultMode = false;
-
-const listEl = document.getElementById("menu-list");
-const messageEl = document.getElementById("message");
-const characterEl = document.getElementById("character");
-const againBtn = document.getElementById("again");
-const recommendBtn = document.getElementById("recommendBtn");
-const resetBtn = document.getElementById("resetBtn");
-
-const styleSelect = document.getElementById("styleSelect");
-const soloSelect = document.getElementById("soloSelect");
-const quickSelect = document.getElementById("quickSelect");
-const budgetSelect = document.getElementById("budgetSelect");
-
-const resultBox = document.getElementById("resultBox");
-const resultMenu = document.getElementById("resultMenu");
-const resultJpName = document.getElementById("resultJpName");
-const filterBox = document.getElementById("filterBox");
-
-function setMood(mood) {
-  characterEl.className = `character mood-${mood}`;
-}
-
-function updateMood() {
-  if (isResultMode) {
-    return;
+const menus = [
+  {
+    name: "라멘",
+    desc: "따뜻하고 진한 국물로 만족감이 높은 메뉴야."
+  },
+  {
+    name: "카레라이스",
+    desc: "든든하게 배를 채우고 싶을 때 잘 어울려."
+  },
+  {
+    name: "초밥",
+    desc: "조금 더 깔끔하고 가볍게 먹고 싶다면 좋아."
+  },
+  {
+    name: "햄버거",
+    desc: "기분 전환하고 싶을 때 만족도가 높은 선택이야."
+  },
+  {
+    name: "돈카츠",
+    desc: "바삭한 식감과 든든함이 필요할 때 추천해."
+  },
+  {
+    name: "오므라이스",
+    desc: "부드럽고 편안한 한 끼가 생각날 때 좋아."
+  },
+  {
+    name: "우동",
+    desc: "부담 없이 따뜻하게 먹고 싶을 때 잘 맞아."
+  },
+  {
+    name: "파스타",
+    desc: "조금 분위기 있게 먹고 싶을 때 괜찮은 선택이야."
   }
+];
 
-  let stateIndex = skipCount;
-
-  if (stateIndex >= moguStates.length) {
-    stateIndex = moguStates.length - 1;
-  }
-
-  const state = moguStates[stateIndex];
-  messageEl.innerText = state.message;
-  setMood(state.mood);
-}
-
-function getFilteredMenus() {
-  const style = styleSelect.value;
-  const solo = soloSelect.value;
-  const quick = quickSelect.value;
-  const budget = budgetSelect.value;
-
-  return menus.filter((menu) => {
-    let styleMatch = true;
-    let soloMatch = true;
-    let quickMatch = true;
-    let budgetMatch = true;
-
-    if (style === "light") {
-      styleMatch = menu.heavyLevel <= 2;
-    } else if (style === "heavy") {
-      styleMatch = menu.heavyLevel >= 2;
-    }
-
-    if (solo === "solo") {
-      soloMatch = menu.soloFriendly === true;
-    }
-
-    if (quick === "quick") {
-      quickMatch = menu.quick === true;
-    }
-
-    if (budget === "cheap") {
-      budgetMatch = menu.priceLevel === 1;
-    } else if (budget === "normal") {
-      budgetMatch = menu.priceLevel <= 2;
-    }
-
-    return styleMatch && soloMatch && quickMatch && budgetMatch;
-  });
-}
-
-function getRandomMenusFromList(sourceList, count) {
-  const shuffled = [...sourceList].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, count);
-}
-
-function showResult(menu) {
-  isResultMode = true;
-
-  resultMenu.innerText = menu.name;
-  resultJpName.innerText = menu.jpName;
-
-  resultBox.classList.remove("hidden");
-  resetBtn.classList.remove("hidden");
-
-  listEl.classList.add("hidden");
-  filterBox.classList.add("hidden");
-  recommendBtn.classList.add("hidden");
-  againBtn.classList.add("hidden");
-
-  messageEl.innerText = `${menu.name}, 오늘 점심은 이걸로 가자!`;
-  setMood("happy");
-}
-
-function chooseMenu(menu) {
-  showResult(menu);
-}
-
-function renderMenus() {
-  const filteredMenus = getFilteredMenus();
-
-  listEl.innerHTML = "";
-  listEl.classList.remove("hidden");
-  resultBox.classList.add("hidden");
-  resetBtn.classList.add("hidden");
-
-  filterBox.classList.remove("hidden");
-  recommendBtn.classList.remove("hidden");
-  againBtn.classList.remove("hidden");
-
-  isResultMode = false;
-
-  if (filteredMenus.length === 0) {
-    messageEl.innerText = "조건에 맞는 메뉴가 없어요. 조건을 조금 완화해볼까?";
-    setMood("sad");
-    return;
-  }
-
-  const selectedMenus = getRandomMenusFromList(
-    filteredMenus,
-    Math.min(3, filteredMenus.length)
+function clearCharacterAnimations() {
+  moguCharacter.classList.remove(
+    "bounce-float",
+    "thinking-anim",
+    "loading-anim",
+    "recommend-anim",
+    "fade-in"
   );
+}
 
-  selectedMenus.forEach((menu) => {
-    const btn = document.createElement("button");
-    btn.className = "menu-button";
-    btn.innerHTML = `${menu.name}<span class="jp-name">${menu.jpName}</span>`;
+function setCharacter(imagePath, message, animationClass) {
+  moguCharacter.src = imagePath;
+  messageBubble.textContent = message;
 
-    btn.addEventListener("click", () => {
-      chooseMenu(menu);
-    });
+  clearCharacterAnimations();
+  void moguCharacter.offsetWidth;
+  moguCharacter.classList.add(animationClass, "fade-in");
+}
 
-    listEl.appendChild(btn);
+function setMainState() {
+  setCharacter(
+    "images/mogu-main.png",
+    "모구가 오늘의 메뉴를 같이 찾아줄게!",
+    "bounce-float"
+  );
+  foodName.textContent = "추천 버튼을 눌러보자";
+  foodDesc.textContent = "기분에 맞는 메뉴를 모구가 골라줄게.";
+}
+
+function setThinkingState() {
+  setCharacter(
+    "images/mogu-thinking.png",
+    "음... 오늘은 뭘 먹을까? 같이 고민해보자!",
+    "thinking-anim"
+  );
+  foodName.textContent = "메뉴 고민 중";
+  foodDesc.textContent = "라멘, 카레, 초밥, 햄버거... 뭐가 좋을까?";
+}
+
+function setLoadingState() {
+  setCharacter(
+    "images/mogu-loading.png",
+    "모구가 맛있는 메뉴를 열심히 찾는 중이야!",
+    "loading-anim"
+  );
+  foodName.textContent = "검색 중...";
+  foodDesc.textContent = "취향에 맞는 메뉴를 빠르게 고르고 있어.";
+}
+
+function setRecommendState(menu) {
+  setCharacter(
+    "images/mogu-recommend.png",
+    "이 메뉴 어때? 모구의 추천 결과야!",
+    "recommend-anim"
+  );
+  foodName.textContent = menu.name;
+  foodDesc.textContent = menu.desc;
+}
+
+function getRandomMenu() {
+  const randomIndex = Math.floor(Math.random() * menus.length);
+  return menus[randomIndex];
+}
+
+thinkBtn.addEventListener("click", () => {
+  setThinkingState();
+});
+
+searchBtn.addEventListener("click", () => {
+  setLoadingState();
+
+  setTimeout(() => {
+    const pickedMenu = getRandomMenu();
+    setRecommendState(pickedMenu);
+  }, 1600);
+});
+
+chipButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const selectedFood = button.dataset.food;
+    const matchedMenu = menus.find((menu) => menu.name === selectedFood);
+
+    if (!matchedMenu) return;
+
+    setCharacter(
+      "images/mogu-thinking.png",
+      `${selectedFood} 쪽으로 마음이 기우는 것 같아!`,
+      "thinking-anim"
+    );
+    foodName.textContent = matchedMenu.name;
+    foodDesc.textContent = matchedMenu.desc;
   });
-
-  updateMood();
-}
-
-function resetApp() {
-  skipCount = 0;
-  isResultMode = false;
-
-  resultBox.classList.add("hidden");
-  resetBtn.classList.add("hidden");
-
-  listEl.classList.remove("hidden");
-  filterBox.classList.remove("hidden");
-  recommendBtn.classList.remove("hidden");
-  againBtn.classList.remove("hidden");
-
-  updateMood();
-  renderMenus();
-}
-
-recommendBtn.addEventListener("click", () => {
-  skipCount = 0;
-  isResultMode = false;
-  renderMenus();
 });
 
-againBtn.addEventListener("click", () => {
-  skipCount += 1;
-  isResultMode = false;
-  renderMenus();
+window.addEventListener("load", () => {
+  setMainState();
 });
-
-resetBtn.addEventListener("click", () => {
-  resetApp();
-});
-
-renderMenus();

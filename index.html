@@ -1,33 +1,97 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <title>Mugle</title>
+  <meta
+    name="description"
+    content="결정을 어려워하는 사람들을 위한 메뉴 추천 앱 Mugle"
+  />
+  <meta name="theme-color" content="#ffb14d" />
 
-<title>Mugle</title>
-
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css">
-
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
+  <div class="app-shell">
+    <main class="app-card">
+      <header class="app-header">
+        <div class="logo-badge">🍴</div>
+        <h1 class="app-title">Mugle</h1>
+        <p class="app-subtitle">결정 못 할 때, 모구가 골라줄게</p>
+      </header>
 
-<div class="container">
+      <section class="hero-section">
+        <div class="character-stage">
+          <div class="stage-glow"></div>
+          <div class="float-deco deco-1"></div>
+          <div class="float-deco deco-2"></div>
+          <div class="float-deco deco-3"></div>
 
-<h1>Mugle</h1>
+          <img
+            id="moguCharacter"
+            class="mogu-img bounce-float"
+            src="images/mogu-main.png"
+            alt="Mogu"
+          />
+        </div>
 
-<img id="mogu" src="images/mogu-main.png" class="mogu">
+        <div class="speech-bubble" id="messageBubble">
+          오늘도 결정이 어렵지? 모구가 도와줄게!
+        </div>
+      </section>
 
-<p id="message">오늘 뭐 먹지?</p>
+      <section class="mode-section">
+        <button id="simpleModeBtn" class="mode-btn active" type="button">심플 모드</button>
+        <button id="tripleModeBtn" class="mode-btn" type="button">3개 후보 모드</button>
+      </section>
 
-<button onclick="recommendFood()">메뉴 추천</button>
+      <section class="result-panel">
+        <p class="result-label" id="resultLabel">오늘의 추천</p>
+        <h2 class="result-food" id="foodName">모드를 선택하고 시작해보자</h2>
+        <p class="result-desc" id="foodDesc">
+          빠르게 하나 고르거나, 후보 3개 중에서 최종 선택할 수 있어.
+        </p>
+      </section>
 
-<h2 id="food"></h2>
+      <section class="chips-section">
+        <button class="chip-btn" data-category="든든하게" type="button">든든하게</button>
+        <button class="chip-btn" data-category="가볍게" type="button">가볍게</button>
+        <button class="chip-btn" data-category="한식" type="button">한식</button>
+        <button class="chip-btn" data-category="일식" type="button">일식</button>
+        <button class="chip-btn" data-category="양식" type="button">양식</button>
+      </section>
 
-</div>
+      <section class="button-section">
+        <button id="thinkBtn" class="btn btn-sub" type="button">고민 시작</button>
+        <button id="searchBtn" class="btn btn-main" type="button">추천 받기</button>
+      </section>
 
-<script src="app.js"></script>
+      <section id="candidateSection" class="candidate-section hidden">
+        <div class="candidate-header">
+          <h3>후보 3개</h3>
+          <p>마음 가는 메뉴 하나를 골라봐.</p>
+        </div>
+        <div id="candidateList" class="candidate-list"></div>
+      </section>
 
+      <section id="celebrationSection" class="celebration-section hidden">
+        <div class="celebration-badge">🎉 결정 완료!</div>
+        <p id="celebrationText" class="celebration-text">좋아, 오늘 메뉴는 이걸로 확정!</p>
+      </section>
+
+      <section class="install-section" id="installSection">
+        <button id="installBtn" class="btn btn-install" type="button" hidden>
+          앱 설치하기
+        </button>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>

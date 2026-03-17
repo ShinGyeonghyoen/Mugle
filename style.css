@@ -1,126 +1,79 @@
-.hero-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Mugle</title>
+  <meta name="description" content="결정을 어려워하는 사람들을 위한 메뉴 추천 앱 Mugle" />
+  <meta name="theme-color" content="#ffb14d" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <main class="app-card">
+      <header class="app-header">
+        <div class="logo-badge">🍴</div>
+        <h1 class="app-title">Mugle</h1>
+        <p class="app-subtitle">결정 못 할 때, 모구가 골라줄게</p>
+      </header>
 
-.character-stage {
-  position: relative;
-  width: 240px;
-  height: 220px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 4px;
-}
+      <section class="hero-section">
+        <div class="character-stage">
+          <div class="stage-glow"></div>
+          <div class="float-deco deco-1"></div>
+          <div class="float-deco deco-2"></div>
+          <div class="float-deco deco-3"></div>
 
-/* 캐릭터 아래 바닥 그림자 */
-.character-stage::before {
-  content: "";
-  position: absolute;
-  bottom: 18px;
-  width: 180px;
-  height: 26px;
-  border-radius: 999px;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(160, 110, 50, 0.18) 0%,
-    rgba(160, 110, 50, 0.08) 45%,
-    rgba(160, 110, 50, 0) 75%
-  );
-  filter: blur(6px);
-  z-index: 0;
-  animation: shadowBreath 2.6s ease-in-out infinite;
-}
+          <img
+            id="moguCharacter"
+            class="mogu-img"
+            src="images/mogu-main.png"
+            alt="Mogu"
+          />
+        </div>
 
-/* 뒤 배경 glow */
-.stage-glow {
-  position: absolute;
-  width: 210px;
-  height: 210px;
-  border-radius: 999px;
-  background: radial-gradient(
-    circle,
-    rgba(255, 241, 184, 0.95) 0%,
-    rgba(255, 229, 173, 0.65) 45%,
-    rgba(255, 229, 173, 0.18) 62%,
-    rgba(255, 255, 255, 0) 78%
-  );
-  filter: blur(2px);
-  animation: glowPulse 3.2s ease-in-out infinite;
-  z-index: 0;
-}
+        <div class="speech-bubble" id="messageBubble">
+          오늘도 결정이 어렵지? 모구가 도와줄게!
+        </div>
+      </section>
 
-/* 캐릭터 이미지 */
-.mogu-img {
-  position: relative;
-  z-index: 2;
-  width: 185px;
-  max-width: 100%;
-  display: block;
-  object-fit: contain;
-  border-radius: 24px;
-  padding: 6px;
-  background: linear-gradient(180deg, #fffaf1 0%, #fff7eb 100%);
-  filter:
-    drop-shadow(0 12px 20px rgba(111, 71, 38, 0.10))
-    drop-shadow(0 4px 10px rgba(111, 71, 38, 0.06));
-  animation: moguFloat 2.8s ease-in-out infinite;
-}
+      <section class="mode-section">
+        <button id="simpleModeBtn" class="mode-btn active" type="button">심플 모드</button>
+        <button id="tripleModeBtn" class="mode-btn" type="button">3개 후보 모드</button>
+      </section>
 
-/* 주변 장식 */
-.float-deco {
-  position: absolute;
-  border-radius: 999px;
-  opacity: 0.92;
-  z-index: 1;
-  filter: blur(0.2px);
-}
+      <section class="result-panel" id="resultPanel">
+        <p class="result-label" id="resultLabel">오늘의 추천</p>
 
-.deco-1 {
-  top: 18px;
-  left: 18px;
-  width: 12px;
-  height: 12px;
-  background: #ffd55c;
-  animation: floatTiny 2.8s ease-in-out infinite;
-}
+        <div id="singleResultView" class="single-result-view">
+          <h2 class="result-food" id="foodName">모드를 선택하고 시작해보자</h2>
+          <p class="result-desc" id="foodDesc">
+            빠르게 하나 고르거나, 후보 3개 중에서 최종 선택할 수 있어.
+          </p>
+        </div>
 
-.deco-2 {
-  top: 44px;
-  right: 24px;
-  width: 9px;
-  height: 9px;
-  background: #9ed8ff;
-  animation: floatTiny 3.2s ease-in-out infinite 0.4s;
-}
+        <div id="tripleResultView" class="triple-result-view hidden">
+          <p class="triple-guide">후보 3개 중 하나를 골라줘</p>
+          <div id="candidateButtons" class="candidate-buttons"></div>
+        </div>
+      </section>
 
-.deco-3 {
-  bottom: 38px;
-  right: 40px;
-  width: 10px;
-  height: 10px;
-  background: #b8e26b;
-  animation: floatTiny 3.5s ease-in-out infinite 0.7s;
-}
+      <section class="chips-section">
+        <button class="chip-btn" data-category="든든하게" type="button">든든하게</button>
+        <button class="chip-btn" data-category="가볍게" type="button">가볍게</button>
+        <button class="chip-btn" data-category="한식" type="button">한식</button>
+        <button class="chip-btn" data-category="일식" type="button">일식</button>
+        <button class="chip-btn" data-category="양식" type="button">양식</button>
+      </section>
 
-.speech-bubble {
-  width: 100%;
-  max-width: 330px;
-  min-height: 66px;
-  background: #fffdfa;
-  border: 2px solid #ffdba8;
-  border-radius: 22px;
-  padding: 12px 14px;
-  text-align: center;
-  font-size: 14px;
-  line-height: 1.45;
-  color: var(--brown-1);
-  box-shadow: var(--shadow-soft);
-  animation: bubblePop 0.45s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 2px;
-}
+      <section class="button-section">
+        <button id="thinkBtn" class="btn btn-sub" type="button">고민 시작</button>
+        <button id="searchBtn" class="btn btn-main" type="button">추천 받기</button>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

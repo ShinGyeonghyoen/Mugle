@@ -20,6 +20,11 @@ const candidateButtons = document.getElementById("candidateButtons");
 const confirmSingleBtn = document.getElementById("confirmSingleBtn");
 const singleDecisionWrap = document.getElementById("singleDecisionWrap");
 
+const shareSingleBtn = document.getElementById("shareSingleBtn");
+const shareTripleBtn = document.getElementById("shareTripleBtn");
+const singleShareWrap = document.getElementById("singleShareWrap");
+const tripleShareWrap = document.getElementById("tripleShareWrap");
+
 /* =========================
    Doom Button Elements
 ========================= */
@@ -43,6 +48,9 @@ let lastSuggestionKey = null;
 let currentSimpleMenu = null;
 let currentTripleCandidates = [];
 let hintShown = false;
+
+/* 공유 모드 상태 */
+let isSharedSession = false;
 
 /* Doom 상태 */
 let doomPressTimer = null;
@@ -145,9 +153,26 @@ function hideSingleDecisionButton() {
 }
 
 function showSingleDecisionButton() {
-  if (singleDecisionWrap && currentMode === "simple" && currentSimpleMenu) {
+  if (singleDecisionWrap && currentMode === "simple" && currentSimpleMenu && !isSharedSession) {
     singleDecisionWrap.classList.remove("hidden");
   }
+}
+
+function hideShareButtons() {
+  if (singleShareWrap) singleShareWrap.classList.add("hidden");
+  if (tripleShareWrap) tripleShareWrap.classList.add("hidden");
+}
+
+function showSingleShareButton() {
+  if (isSharedSession) return;
+  if (singleShareWrap) singleShareWrap.classList.remove("hidden");
+  if (tripleShareWrap) tripleShareWrap.classList.add("hidden");
+}
+
+function showTripleShareButton() {
+  if (isSharedSession) return;
+  if (tripleShareWrap) tripleShareWrap.classList.remove("hidden");
+  if (singleShareWrap) singleShareWrap.classList.add("hidden");
 }
 
 function clearCelebrateStyle() {
@@ -163,6 +188,7 @@ function setMainState() {
   clearCelebrateStyle();
   showSingleView();
   hideSingleDecisionButton();
+  hideShareButtons();
   setCharacter("images/mogu-main.png", "오늘도 결정이 어렵지? 모구가 도와줄게!");
   resultLabel.textContent = "오늘의 추천";
   foodName.textContent = "모드를 선택하고 시작해보자";
@@ -175,6 +201,7 @@ function setThinkingState() {
   clearCelebrateStyle();
   showSingleView();
   hideSingleDecisionButton();
+  hideShareButtons();
   setCharacter("images/mogu-thinking.png", "음... 오늘은 뭘 먹을까? 같이 좁혀보자!");
   resultLabel.textContent = "고민 중";
   foodName.textContent = "메뉴 고민 중";
@@ -185,6 +212,7 @@ function setLoadingState(customMessage = "모구가 직장인 맞춤 메뉴를 �
   clearCelebrateStyle();
   showSingleView();
   hideSingleDecisionButton();
+  hideShareButtons();
   setCharacter("images/mogu-loading.png", customMessage);
   resultLabel.textContent = "검색 중";
   foodName.textContent = "추천 준비 중...";
@@ -201,6 +229,7 @@ function setRecommendState(menu, annoyedText = null) {
   currentSimpleMenu = menu;
   currentTripleCandidates = [];
   showSingleDecisionButton();
+  showSingleShareButton();
 }
 
 function setTripleCandidates(candidateMenus, annoyedText = null) {
@@ -222,12 +251,15 @@ function setTripleCandidates(candidateMenus, annoyedText = null) {
     button.addEventListener("click", () => finalizeSelection(menu));
     candidateButtons.appendChild(button);
   });
+
+  showTripleShareButton();
 }
 
 function finalizeSelection(menu) {
   showSingleView();
   resultPanel.classList.add("celebrate");
   hideSingleDecisionButton();
+  hideShareButtons();
   setCharacter("images/mogu-celebrate.png", `${menu.name}, 최종 결정 완료! 이제 맛있게 먹기만 하면 돼!`);
   resultLabel.textContent = "최종 선택";
   foodName.textContent = `오늘의 메뉴는 ${menu.name} 입니다`;
@@ -303,6 +335,7 @@ function activateMode(mode) {
   clearCelebrateStyle();
   showSingleView();
   hideSingleDecisionButton();
+  hideShareButtons();
   resultLabel.textContent = "모드 변경";
   foodName.textContent = mode === "simple" ? "심플 모드 선택됨" : "3개 후보 모드 선택됨";
   foodDesc.textContent = mode === "simple"
@@ -330,6 +363,7 @@ function activateCategory(category) {
   showSingleView();
   clearCelebrateStyle();
   hideSingleDecisionButton();
+  hideShareButtons();
   setCharacter("images/mogu-thinking.png", `${selectedCategory} 느낌으로 후보를 좁혀볼게!`);
   resultLabel.textContent = "조건 선택";
   foodName.textContent = selectedCategory;
@@ -337,6 +371,188 @@ function activateCategory(category) {
   currentSimpleMenu = null;
   currentTripleCandidates = [];
   clearCandidateHighlight();
+}
+
+/* =========================
+   Share Helpers
+========================= */
+function buildShareUrl() {
+  const url = new URL(window.location.href);
+  url.search = "";
+
+  url.searchParams.set("share", "1");
+
+  if (currentMode === "triple" && currentTripleCandidates.length > 0) {
+    url.searchParams.set("mode", "triple");
+    url.searchParams.set(
+      "items",
+      currentTripleCandidates.map((menu) => menu.name).join("|")
+    );
+  } else if (currentSimpleMenu) {
+    url.searchParams.set("mode", "single");
+    url.searchParams.set("item", currentSimpleMenu.name);
+  } else {
+    return null;
+  }
+
+  return url.toString();
+}
+
+async function shareCurrentState() {
+  const shareUrl = buildShareUrl();
+
+  if (!shareUrl) {
+    setCharacter("images/mogu-thinking.png", "먼저 추천 결과를 만든 다음에 친구한테 넘겨라.");
+    return;
+  }
+
+  const shareData = {
+    title: "Mugle - 누가 좀 골라줘",
+    text: "모구가 대신 물어봄. 이거 좀 골라줘.",
+    url: shareUrl
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(shareUrl);
+      setCharacter("images/mogu-recommend.png", "링크 복사했다. 이제 친구한테 던져라.");
+    } else {
+      window.prompt("이 링크를 복사해서 공유해줘", shareUrl);
+    }
+  } catch (error) {
+    // 사용자가 공유 취소한 경우 조용히 무시
+  }
+}
+
+function getMenuByName(name) {
+  return menus.find((menu) => menu.name === name) || {
+    name,
+    desc: "친구가 대신 골라주길 기다리는 메뉴야.",
+    categories: []
+  };
+}
+
+function parseShareParams() {
+  const params = new URLSearchParams(window.location.search);
+  const isShare = params.get("share") === "1";
+  if (!isShare) return null;
+
+  const mode = params.get("mode");
+
+  if (mode === "single") {
+    const item = params.get("item");
+    if (!item) return null;
+    return {
+      mode: "single",
+      item: decodeURIComponent(item)
+    };
+  }
+
+  if (mode === "triple") {
+    const itemsRaw = params.get("items");
+    if (!itemsRaw) return null;
+    return {
+      mode: "triple",
+      items: itemsRaw.split("|").map((item) => decodeURIComponent(item))
+    };
+  }
+
+  return null;
+}
+
+function enterSharedSingleMode(itemName) {
+  isSharedSession = true;
+  currentMode = "simple";
+  currentSimpleMenu = getMenuByName(itemName);
+  currentTripleCandidates = [];
+
+  simpleModeBtn.classList.add("active");
+  tripleModeBtn.classList.remove("active");
+
+  thinkBtn.classList.add("hidden");
+  searchBtn.classList.add("hidden");
+  hideSingleDecisionButton();
+  hideShareButtons();
+  clearCelebrateStyle();
+  showSingleView();
+
+  chipButtons.forEach((btn) => btn.classList.add("hidden"));
+
+  setCharacter("images/mogu-recommend.png", "이 인간이 또 결정을 못 한다. 네가 대신 정해줘라.");
+  resultLabel.textContent = "공유 받은 선택 요청";
+  foodName.textContent = currentSimpleMenu.name;
+  foodDesc.textContent = currentSimpleMenu.desc;
+
+  if (confirmSingleBtn) {
+    confirmSingleBtn.textContent = "이걸로 가자";
+    singleDecisionWrap.classList.remove("hidden");
+  }
+}
+
+function enterSharedTripleMode(itemNames) {
+  isSharedSession = true;
+  currentMode = "triple";
+  currentSimpleMenu = null;
+  currentTripleCandidates = itemNames.map(getMenuByName);
+
+  simpleModeBtn.classList.remove("active");
+  tripleModeBtn.classList.add("active");
+
+  thinkBtn.classList.add("hidden");
+  searchBtn.classList.add("hidden");
+  hideSingleDecisionButton();
+  hideShareButtons();
+  clearCelebrateStyle();
+  showTripleView();
+
+  chipButtons.forEach((btn) => btn.classList.add("hidden"));
+
+  setCharacter("images/mogu-recommend.png", "결정 못 하는 놈 대신 네가 골라라.");
+  resultLabel.textContent = "공유 받은 선택 요청";
+  candidateButtons.innerHTML = "";
+
+  currentTripleCandidates.forEach((menu) => {
+    const button = document.createElement("button");
+    button.className = "candidate-btn";
+    button.type = "button";
+    button.textContent = menu.name;
+    button.dataset.menuName = menu.name;
+    button.addEventListener("click", () => finalizeSharedSelection(menu));
+    candidateButtons.appendChild(button);
+  });
+}
+
+function finalizeSharedSelection(menu) {
+  showSingleView();
+  hideSingleDecisionButton();
+  hideShareButtons();
+  resultPanel.classList.add("celebrate");
+  setCharacter("images/mogu-celebrate.png", `대신 골라줬다. 오늘은 ${menu.name}다.`);
+  resultLabel.textContent = "대신 골라줌 완료";
+  foodName.textContent = `오늘의 메뉴는 ${menu.name} 입니다`;
+  foodDesc.textContent = `좋다. ${menu.name}(으)로 정해줬다. 이제 보내주면 된다 🎉`;
+  currentSimpleMenu = menu;
+  currentTripleCandidates = [];
+  clearCandidateHighlight();
+}
+
+function initSharedModeIfNeeded() {
+  const shareData = parseShareParams();
+  if (!shareData) return false;
+
+  if (shareData.mode === "single") {
+    enterSharedSingleMode(shareData.item);
+    return true;
+  }
+
+  if (shareData.mode === "triple") {
+    enterSharedTripleMode(shareData.items);
+    return true;
+  }
+
+  return false;
 }
 
 /* =========================
@@ -379,7 +595,7 @@ function showHintBubble(message) {
 }
 
 function maybeShowDoomHint() {
-  if (hintShown) return;
+  if (hintShown || isSharedSession) return;
   if (rejectCount >= 3) {
     hintShown = true;
     showHintBubble(randomPick(doomHintMessages));
@@ -501,6 +717,7 @@ async function startDoomDecision() {
 
     showSingleView();
     hideSingleDecisionButton();
+    hideShareButtons();
     resultPanel.classList.add("celebrate");
     setCharacter("images/mogu-celebrate.png", `인류는 멸망하지 않았다. 하지만 오늘은 ${targetMenu.name}다.`);
     resultLabel.textContent = "강제 결정 완료";
@@ -515,6 +732,7 @@ async function startDoomDecision() {
   }
 
   hideSingleDecisionButton();
+  hideShareButtons();
   resultPanel.classList.add("celebrate");
   setCharacter("images/mogu-celebrate.png", `드디어 결정을 포기했군. 오늘은 ${targetMenu.name}다.`);
   resultLabel.textContent = "강제 결정 완료";
@@ -528,7 +746,7 @@ async function startDoomDecision() {
 }
 
 function handleDoomPressStart(event) {
-  if (!doomButton) return;
+  if (!doomButton || isSharedSession) return;
   event.preventDefault();
 
   doomPressStartedAt = Date.now();
@@ -545,7 +763,7 @@ function handleDoomPressStart(event) {
 }
 
 function handleDoomPressEnd() {
-  if (!doomButton) return;
+  if (!doomButton || isSharedSession) return;
 
   const pressedMs = Date.now() - doomPressStartedAt;
 
@@ -586,16 +804,20 @@ function bindDoomButtonEvents() {
    Existing Events
 ========================= */
 thinkBtn.addEventListener("click", () => {
+  if (isSharedSession) return;
   rejectCount = 0;
   setThinkingState();
 });
 
 searchBtn.addEventListener("click", () => {
+  if (isSharedSession) return;
+
   const filteredMenus = getFilteredMenus();
 
   if (filteredMenus.length === 0) {
     showSingleView();
     hideSingleDecisionButton();
+    hideShareButtons();
     setCharacter("images/mogu-thinking.png", "조건에 맞는 메뉴가 없네. 다른 조건으로 다시 골라보자!");
     resultLabel.textContent = "조건 재설정";
     foodName.textContent = "메뉴 없음";
@@ -625,11 +847,19 @@ searchBtn.addEventListener("click", () => {
   }, 1200);
 });
 
-simpleModeBtn.addEventListener("click", () => activateMode("simple"));
-tripleModeBtn.addEventListener("click", () => activateMode("triple"));
+simpleModeBtn.addEventListener("click", () => {
+  if (isSharedSession) return;
+  activateMode("simple");
+});
+
+tripleModeBtn.addEventListener("click", () => {
+  if (isSharedSession) return;
+  activateMode("triple");
+});
 
 chipButtons.forEach((button) => {
   button.addEventListener("click", () => {
+    if (isSharedSession) return;
     activateCategory(button.dataset.category);
   });
 });
@@ -637,14 +867,37 @@ chipButtons.forEach((button) => {
 if (confirmSingleBtn) {
   confirmSingleBtn.addEventListener("click", () => {
     if (currentSimpleMenu) {
-      finalizeSelection(currentSimpleMenu);
+      if (isSharedSession) {
+        finalizeSharedSelection(currentSimpleMenu);
+      } else {
+        finalizeSelection(currentSimpleMenu);
+      }
     }
   });
 }
 
+if (shareSingleBtn) {
+  shareSingleBtn.addEventListener("click", async () => {
+    await shareCurrentState();
+  });
+}
+
+if (shareTripleBtn) {
+  shareTripleBtn.addEventListener("click", async () => {
+    await shareCurrentState();
+  });
+}
+
 window.addEventListener("load", () => {
-  setMainState();
   bindDoomButtonEvents();
+
+  const enteredShared = initSharedModeIfNeeded();
+  if (enteredShared) {
+    doomButton?.classList.add("hidden");
+    return;
+  }
+
+  setMainState();
 
   setTimeout(() => {
     if (!hintShown) {

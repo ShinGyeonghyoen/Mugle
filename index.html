@@ -1,123 +1,74 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Mugle</title>
-
-<link rel="stylesheet" href="style.css">
-<link rel="manifest" href="manifest.json">
-
-<meta name="theme-color" content="#c78a4a">
-
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Mugle">
-
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <title>Mugle</title>
+  <meta
+    name="description"
+    content="오늘 뭐 먹지? 모구가 메뉴를 추천해주는 Mugle 앱"
+  />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json" />
 </head>
 <body>
-  <div class="app">
-    <h1>Mugle</h1>
-    <p>Lunch Decision App</p>
+  <div class="app-shell">
+    <main class="app-card">
+      <header class="app-header">
+        <div class="logo-badge">🍴</div>
+        <h1 class="app-title">Mugle</h1>
+        <p class="app-subtitle">오늘 뭐 먹지?</p>
+      </header>
 
-    <div id="character" class="character mood-happy">
-      <div class="tail"></div>
+      <section class="hero-section">
+        <div class="character-stage">
+          <div class="stage-glow"></div>
+          <div class="float-deco deco-1"></div>
+          <div class="float-deco deco-2"></div>
+          <div class="float-deco deco-3"></div>
 
-      <div class="ear left"></div>
-      <div class="ear right"></div>
-
-      <div class="body">
-        <div class="eye-patch left">
-          <div class="eye"></div>
-          <div class="eyebrow"></div>
+          <img
+            id="moguCharacter"
+            class="mogu-img bounce-float"
+            src="images/mogu-main.png"
+            alt="Mogu main character"
+          />
         </div>
 
-        <div class="eye-patch right">
-          <div class="eye"></div>
-          <div class="eyebrow"></div>
+        <div class="speech-bubble" id="messageBubble">
+          모구가 오늘의 메뉴를 같이 찾아줄게!
         </div>
+      </section>
 
-        <div class="nose"></div>
-        <div class="mouth"></div>
-        <div class="belly"></div>
-      </div>
+      <section class="result-panel" id="resultPanel">
+        <p class="result-label">오늘의 추천</p>
+        <h2 class="result-food" id="foodName">추천 버튼을 눌러보자</h2>
+        <p class="result-desc" id="foodDesc">
+          기분에 맞는 메뉴를 모구가 골라줄게.
+        </p>
+      </section>
 
-      <div class="arm left"></div>
-      <div class="arm right"></div>
-      <div class="leg left"></div>
-      <div class="leg right"></div>
-    </div>
+      <section class="chips-section">
+        <button class="chip-btn" data-food="라멘" type="button">라멘</button>
+        <button class="chip-btn" data-food="카레" type="button">카레</button>
+        <button class="chip-btn" data-food="초밥" type="button">초밥</button>
+        <button class="chip-btn" data-food="햄버거" type="button">햄버거</button>
+      </section>
 
-    <div id="message" class="message"></div>
-
-    <div id="filterBox" class="filter-box">
-      <div class="filter-group">
-        <label for="styleSelect">식사 스타일</label>
-        <select id="styleSelect">
-          <option value="any">상관없음</option>
-          <option value="light">가볍게</option>
-          <option value="heavy">든든하게</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label for="soloSelect">식사 형태</label>
-        <select id="soloSelect">
-          <option value="any">상관없음</option>
-          <option value="solo">혼밥 위주</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label for="quickSelect">속도</label>
-        <select id="quickSelect">
-          <option value="any">상관없음</option>
-          <option value="quick">빨리 먹기</option>
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label for="budgetSelect">예산</label>
-        <select id="budgetSelect">
-          <option value="any">상관없음</option>
-          <option value="cheap">저렴하게</option>
-          <option value="normal">보통까지</option>
-        </select>
-      </div>
-    </div>
-
-    <div id="menu-list" class="menu-list"></div>
-
-    <div id="resultBox" class="result-box hidden">
-      <div class="result-label">오늘의 점심 확정</div>
-      <div id="resultMenu" class="result-menu"></div>
-      <div id="resultJpName" class="result-jp-name"></div>
-    </div>
-
-    <div class="action-row">
-      <button id="recommendBtn" class="primary">추천 받기</button>
-      <button id="again" class="secondary">다시 추천</button>
-      <button id="resetBtn" class="tertiary hidden">처음부터 다시</button>
-    </div>
+      <section class="button-section">
+        <button id="thinkBtn" class="btn btn-sub" type="button">
+          메뉴 고민하기
+        </button>
+        <button id="searchBtn" class="btn btn-main" type="button">
+          추천 받기
+        </button>
+      </section>
+    </main>
   </div>
 
-  <script type="module" src="app.js"></script>
-  <script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./service-worker.js")
-        .then((registration) => {
-          console.log("Service Worker registered:", registration.scope);
-        })
-        .catch((error) => {
-          console.log("Service Worker registration failed:", error);
-        });
-    });
-  }
-</script>
+  <script src="app.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-const CACHE_NAME = "mugle-cache-v1";
+const CACHE_NAME = "mugle-cache-v2";
 
 const ASSETS_TO_CACHE = [
   "./",
@@ -10,6 +10,7 @@ const ASSETS_TO_CACHE = [
   "./images/mogu-thinking.png",
   "./images/mogu-loading.png",
   "./images/mogu-recommend.png",
+  "./images/mogu-celebrate.png",
   "./icons/icon-192.png",
   "./icons/icon-512.png"
 ];

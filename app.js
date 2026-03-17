@@ -16,9 +16,11 @@ const resultPanel = document.getElementById("resultPanel");
 const singleResultView = document.getElementById("singleResultView");
 const tripleResultView = document.getElementById("tripleResultView");
 const candidateButtons = document.getElementById("candidateButtons");
+const tripleGuide = document.getElementById("tripleGuide");
 
 const confirmSingleBtn = document.getElementById("confirmSingleBtn");
 const singleDecisionWrap = document.getElementById("singleDecisionWrap");
+const seeOtherBtn = document.getElementById("seeOtherBtn");
 
 const shareSingleBtn = document.getElementById("shareSingleBtn");
 const shareTripleBtn = document.getElementById("shareTripleBtn");
@@ -55,6 +57,9 @@ let hintShown = false;
 /* 공유/회신 모드 상태 */
 let isSharedSession = false;
 let isReplySession = false;
+
+/* 공유받은 단일 메뉴에서 후보 다시 보기 사용 여부 */
+let sharedSingleExpanded = false;
 
 /* 친구가 최종 선택한 메뉴 */
 let sharedSelectedMenu = null;
@@ -171,6 +176,18 @@ function showSingleDecisionButton() {
   }
 }
 
+function hideSeeOtherButton() {
+  if (seeOtherBtn) {
+    seeOtherBtn.classList.add("hidden");
+  }
+}
+
+function showSeeOtherButton() {
+  if (seeOtherBtn && isSharedSession && currentMode === "simple" && currentSimpleMenu && !sharedSingleExpanded) {
+    seeOtherBtn.classList.remove("hidden");
+  }
+}
+
 function hideShareButtons() {
   if (singleShareWrap) singleShareWrap.classList.add("hidden");
   if (tripleShareWrap) tripleShareWrap.classList.add("hidden");
@@ -215,6 +232,7 @@ function setMainState() {
   clearCelebrateStyle();
   showSingleView();
   hideSingleDecisionButton();
+  hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
   setCharacter("images/mogu-main.png", "오늘도 결정이 어렵지? 모구가 도와줄게!");
@@ -224,12 +242,14 @@ function setMainState() {
   currentSimpleMenu = null;
   currentTripleCandidates = [];
   sharedSelectedMenu = null;
+  sharedSingleExpanded = false;
 }
 
 function setThinkingState() {
   clearCelebrateStyle();
   showSingleView();
   hideSingleDecisionButton();
+  hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
   setCharacter("images/mogu-thinking.png", "음... 오늘은 뭘 먹을까? 같이 좁혀보자!");
@@ -242,6 +262,7 @@ function setLoadingState(customMessage = "모구가 직장인 맞춤 메뉴를 �
   clearCelebrateStyle();
   showSingleView();
   hideSingleDecisionButton();
+  hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
   setCharacter("images/mogu-loading.png", customMessage);
@@ -254,6 +275,7 @@ function setRecommendState(menu, annoyedText = null) {
   clearCelebrateStyle();
   showSingleView();
   hideRelayButton();
+  hideSeeOtherButton();
   setCharacter("images/mogu-recommend.png", annoyedText || "이 메뉴 어때? 모구의 추천 결과야!");
   resultLabel.textContent = "추천 결과";
   foodName.textContent = menu.name;
@@ -268,9 +290,16 @@ function setTripleCandidates(candidateMenus, annoyedText = null) {
   clearCelebrateStyle();
   showTripleView();
   hideSingleDecisionButton();
+  hideSeeOtherButton();
   hideRelayButton();
   setCharacter("images/mogu-recommend.png", annoyedText || "좋아, 고민하기 좋게 후보 3개를 준비했어!");
   resultLabel.textContent = "후보 3개";
+  if (tripleGuide) {
+    tripleGuide.textContent = isSharedSession
+      ? "새로운 후보 3개다. 하나 골라서 결과를 돌려줘"
+      : "후보 3개 중 하나를 골라줘";
+  }
+
   candidateButtons.innerHTML = "";
   currentSimpleMenu = null;
   currentTripleCandidates = [...candidateMenus];
@@ -281,17 +310,28 @@ function setTripleCandidates(candidateMenus, annoyedText = null) {
     button.type = "button";
     button.textContent = menu.name;
     button.dataset.menuName = menu.name;
-    button.addEventListener("click", () => finalizeSelection(menu));
+
+    if (isSharedSession) {
+      button.addEventListener("click", () => finalizeSharedSelection(menu));
+    } else {
+      button.addEventListener("click", () => finalizeSelection(menu));
+    }
+
     candidateButtons.appendChild(button);
   });
 
-  showTripleShareButton();
+  if (!isSharedSession && !isReplySession) {
+    showTripleShareButton();
+  } else {
+    hideShareButtons();
+  }
 }
 
 function finalizeSelection(menu) {
   showSingleView();
   resultPanel.classList.add("celebrate");
   hideSingleDecisionButton();
+  hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
   setCharacter("images/mogu-celebrate.png", `${menu.name}, 최종 결정 완료! 이제 맛있게 먹기만 하면 돼!`);
@@ -370,6 +410,7 @@ function activateMode(mode) {
   clearCelebrateStyle();
   showSingleView();
   hideSingleDecisionButton();
+  hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
   resultLabel.textContent = "모드 변경";
@@ -381,6 +422,7 @@ function activateMode(mode) {
   currentSimpleMenu = null;
   currentTripleCandidates = [];
   sharedSelectedMenu = null;
+  sharedSingleExpanded = false;
   clearCandidateHighlight();
 }
 
@@ -400,6 +442,7 @@ function activateCategory(category) {
   showSingleView();
   clearCelebrateStyle();
   hideSingleDecisionButton();
+  hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
   setCharacter("images/mogu-thinking.png", `${selectedCategory} 느낌으로 후보를 좁혀볼게!`);
@@ -409,6 +452,7 @@ function activateCategory(category) {
   currentSimpleMenu = null;
   currentTripleCandidates = [];
   sharedSelectedMenu = null;
+  sharedSingleExpanded = false;
   clearCandidateHighlight();
 }
 
@@ -473,7 +517,7 @@ async function shareCurrentState() {
       window.prompt("이 링크를 복사해서 공유해줘", shareUrl);
     }
   } catch (error) {
-    // 사용자가 공유 취소한 경우 조용히 무시
+    // 공유 취소 시 무시
   }
 }
 
@@ -502,7 +546,7 @@ async function shareReplyResult() {
       window.prompt("이 결과 링크를 복사해서 전달해줘", replyUrl);
     }
   } catch (error) {
-    // 사용자가 공유 취소한 경우 조용히 무시
+    // 공유 취소 시 무시
   }
 }
 
@@ -560,16 +604,17 @@ function parseReplyParams() {
 
 function enterSharedSingleMode(itemName) {
   isSharedSession = true;
+  isReplySession = false;
   currentMode = "simple";
   currentSimpleMenu = getMenuByName(itemName);
   currentTripleCandidates = [];
   sharedSelectedMenu = null;
+  sharedSingleExpanded = false;
 
   simpleModeBtn.classList.add("active");
   tripleModeBtn.classList.remove("active");
 
   hideChipsAndMainButtons();
-  hideSingleDecisionButton();
   hideShareButtons();
   hideRelayButton();
   clearCelebrateStyle();
@@ -582,22 +627,30 @@ function enterSharedSingleMode(itemName) {
 
   if (confirmSingleBtn) {
     confirmSingleBtn.textContent = "이걸로 가자";
+  }
+
+  if (singleDecisionWrap) {
     singleDecisionWrap.classList.remove("hidden");
   }
+
+  showSeeOtherButton();
 }
 
 function enterSharedTripleMode(itemNames) {
   isSharedSession = true;
+  isReplySession = false;
   currentMode = "triple";
   currentSimpleMenu = null;
   currentTripleCandidates = itemNames.map(getMenuByName);
   sharedSelectedMenu = null;
+  sharedSingleExpanded = true;
 
   simpleModeBtn.classList.remove("active");
   tripleModeBtn.classList.add("active");
 
   hideChipsAndMainButtons();
   hideSingleDecisionButton();
+  hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
   clearCelebrateStyle();
@@ -605,6 +658,9 @@ function enterSharedTripleMode(itemNames) {
 
   setCharacter("images/mogu-recommend.png", "결정 못 하는 놈 대신 네가 골라라.");
   resultLabel.textContent = "공유 받은 선택 요청";
+  if (tripleGuide) {
+    tripleGuide.textContent = "후보 3개 중 하나를 골라서 결과를 돌려줘";
+  }
   candidateButtons.innerHTML = "";
 
   currentTripleCandidates.forEach((menu) => {
@@ -618,9 +674,25 @@ function enterSharedTripleMode(itemNames) {
   });
 }
 
+function expandSharedSingleToTriple() {
+  if (!isSharedSession || !currentSimpleMenu) return;
+
+  const filteredMenus = getFilteredMenus();
+  const newCandidates = getThreeRandomMenus(filteredMenus);
+
+  sharedSingleExpanded = true;
+  currentMode = "triple";
+  simpleModeBtn.classList.remove("active");
+  tripleModeBtn.classList.add("active");
+
+  setCharacter("images/mogu-recommend.png", "좋다. 완전히 새로운 후보 3개를 다시 뽑아왔다.");
+  setTripleCandidates(newCandidates, "마음에 안 들었나 보네. 그럼 새 후보로 다시 간다.");
+}
+
 function finalizeSharedSelection(menu) {
   showSingleView();
   hideSingleDecisionButton();
+  hideSeeOtherButton();
   hideShareButtons();
   showRelayButton();
   resultPanel.classList.add("celebrate");
@@ -636,13 +708,16 @@ function finalizeSharedSelection(menu) {
 
 function enterReplyMode(selectedName) {
   isReplySession = true;
+  isSharedSession = false;
   const menu = getMenuByName(selectedName);
   currentSimpleMenu = menu;
   currentTripleCandidates = [];
   sharedSelectedMenu = menu;
+  sharedSingleExpanded = false;
 
   hideChipsAndMainButtons();
   hideSingleDecisionButton();
+  hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
   clearCelebrateStyle();
@@ -842,6 +917,7 @@ async function startDoomDecision() {
 
     showSingleView();
     hideSingleDecisionButton();
+    hideSeeOtherButton();
     hideShareButtons();
     hideRelayButton();
     resultPanel.classList.add("celebrate");
@@ -859,6 +935,7 @@ async function startDoomDecision() {
   }
 
   hideSingleDecisionButton();
+  hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
   resultPanel.classList.add("celebrate");
@@ -946,6 +1023,7 @@ searchBtn.addEventListener("click", () => {
   if (filteredMenus.length === 0) {
     showSingleView();
     hideSingleDecisionButton();
+    hideSeeOtherButton();
     hideShareButtons();
     hideRelayButton();
     setCharacter("images/mogu-thinking.png", "조건에 맞는 메뉴가 없네. 다른 조건으로 다시 골라보자!");
@@ -1004,6 +1082,13 @@ if (confirmSingleBtn) {
     } else if (!isReplySession) {
       finalizeSelection(currentSimpleMenu);
     }
+  });
+}
+
+if (seeOtherBtn) {
+  seeOtherBtn.addEventListener("click", () => {
+    if (!isSharedSession || isReplySession) return;
+    expandSharedSingleToTriple();
   });
 }
 

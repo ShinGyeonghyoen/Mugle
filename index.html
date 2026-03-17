@@ -50,12 +50,20 @@
         <button id="tripleModeBtn" class="mode-btn" type="button">3개 후보 모드</button>
       </section>
 
-      <section class="result-panel">
+      <section class="result-panel" id="resultPanel">
         <p class="result-label" id="resultLabel">오늘의 추천</p>
-        <h2 class="result-food" id="foodName">모드를 선택하고 시작해보자</h2>
-        <p class="result-desc" id="foodDesc">
-          빠르게 하나 고르거나, 후보 3개 중에서 최종 선택할 수 있어.
-        </p>
+
+        <div id="singleResultView" class="single-result-view">
+          <h2 class="result-food" id="foodName">모드를 선택하고 시작해보자</h2>
+          <p class="result-desc" id="foodDesc">
+            빠르게 하나 고르거나, 후보 3개 중에서 최종 선택할 수 있어.
+          </p>
+        </div>
+
+        <div id="tripleResultView" class="triple-result-view hidden">
+          <p class="triple-guide">후보 3개 중 하나를 골라줘</p>
+          <div id="candidateButtons" class="candidate-buttons"></div>
+        </div>
       </section>
 
       <section class="chips-section">
@@ -69,25 +77,6 @@
       <section class="button-section">
         <button id="thinkBtn" class="btn btn-sub" type="button">고민 시작</button>
         <button id="searchBtn" class="btn btn-main" type="button">추천 받기</button>
-      </section>
-
-      <section id="candidateSection" class="candidate-section hidden">
-        <div class="candidate-header">
-          <h3>후보 3개</h3>
-          <p>마음 가는 메뉴 하나를 골라봐.</p>
-        </div>
-        <div id="candidateList" class="candidate-list"></div>
-      </section>
-
-      <section id="celebrationSection" class="celebration-section hidden">
-        <div class="celebration-badge">🎉 결정 완료!</div>
-        <p id="celebrationText" class="celebration-text">좋아, 오늘 메뉴는 이걸로 확정!</p>
-      </section>
-
-      <section class="install-section" id="installSection">
-        <button id="installBtn" class="btn btn-install" type="button" hidden>
-          앱 설치하기
-        </button>
       </section>
     </main>
   </div>

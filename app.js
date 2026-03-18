@@ -35,6 +35,9 @@ const friendResultWrap = document.getElementById("friendResultWrap");
 const confirmFriendResultBtn = document.getElementById("confirmFriendResultBtn");
 const restartFromFriendBtn = document.getElementById("restartFromFriendBtn");
 
+/* 하이라이트 연출 */
+const highlightOverlay = document.getElementById("highlightOverlay");
+
 /* =========================
    Doom Button Elements
 ========================= */
@@ -247,6 +250,40 @@ function showChipsAndMainButtons() {
   searchBtn.classList.remove("hidden");
 }
 
+function playHighlightEffect() {
+  if (highlightOverlay) {
+    highlightOverlay.classList.remove("hidden");
+    highlightOverlay.setAttribute("aria-hidden", "false");
+  }
+
+  if (resultPanel) {
+    resultPanel.classList.remove("highlighting");
+    void resultPanel.offsetWidth;
+    resultPanel.classList.add("highlighting");
+  }
+
+  if (moguCharacter) {
+    moguCharacter.classList.remove("highlighting");
+    void moguCharacter.offsetWidth;
+    moguCharacter.classList.add("highlighting");
+  }
+
+  setTimeout(() => {
+    if (highlightOverlay) {
+      highlightOverlay.classList.add("hidden");
+      highlightOverlay.setAttribute("aria-hidden", "true");
+    }
+
+    if (resultPanel) {
+      resultPanel.classList.remove("highlighting");
+    }
+
+    if (moguCharacter) {
+      moguCharacter.classList.remove("highlighting");
+    }
+  }, 950);
+}
+
 function setMainState() {
   clearCelebrateStyle();
   showSingleView();
@@ -370,6 +407,7 @@ function finalizeSelection(menu) {
   sharedSelectedMenu = menu;
   clearCandidateHighlight();
   hideDoomResult();
+  playHighlightEffect();
 }
 
 function finalizeReplySelection(menu) {
@@ -404,6 +442,7 @@ function finalizeReplySelection(menu) {
   }
 
   window.history.replaceState({}, "", window.location.pathname);
+  playHighlightEffect();
 }
 
 function restartFromReplyResult() {
@@ -454,7 +493,6 @@ function restartFromReplyResult() {
       lastSuggestionKey = pickedMenus.map((m) => m.name).join("|");
     }
 
-    currentSimpleMenu = currentMode === "simple" ? currentSimpleMenu : null;
     sharedSelectedMenu = null;
     sharedSingleExpanded = false;
     rejectCount = Math.min(rejectCount + 1, 6);
@@ -1061,6 +1099,7 @@ async function startDoomDecision() {
     currentSimpleMenu = targetMenu;
     currentTripleCandidates = [];
     sharedSelectedMenu = targetMenu;
+    playHighlightEffect();
     return;
   }
 
@@ -1080,6 +1119,7 @@ async function startDoomDecision() {
   currentSimpleMenu = targetMenu;
   currentTripleCandidates = [];
   sharedSelectedMenu = targetMenu;
+  playHighlightEffect();
 }
 
 function handleDoomPressStart(event) {

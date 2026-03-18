@@ -278,12 +278,20 @@ button {
   margin-top: 14px;
   display: flex;
   justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 #confirmSingleBtn,
-#relayResultBtn {
+#relayResultBtn,
+#confirmFriendResultBtn,
+#restartFromFriendBtn {
   width: 100%;
   max-width: 220px;
+}
+
+#friendResultWrap {
+  margin-top: 14px;
 }
 
 .triple-guide {
@@ -716,6 +724,18 @@ body.doom-shaking {
 
   .button-section {
     flex-direction: column;
+  }
+
+  .single-decision-wrap {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #confirmSingleBtn,
+  #relayResultBtn,
+  #confirmFriendResultBtn,
+  #restartFromFriendBtn {
+    max-width: 100%;
   }
 
   #doom-button-wrap {

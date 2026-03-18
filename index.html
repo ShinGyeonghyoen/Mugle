@@ -13,7 +13,7 @@
   />
   <meta name="theme-color" content="#ffb14d" />
   <link rel="manifest" href="./manifest.json" />
-  <link rel="stylesheet" href="./style.css?v=12" />
+  <link rel="stylesheet" href="./style.css?v=13" />
 </head>
 <body>
   <!-- ☢ 지구멸망 버튼 -->
@@ -102,13 +102,13 @@
             빠르게 하나 고르거나, 후보 3개 중에서 최종 선택할 수 있어.
           </p>
 
-          <!-- 싱글 결정 버튼 영역 -->
+          <!-- 싱글 기본 결정 버튼 영역 -->
           <div id="singleDecisionWrap" class="single-decision-wrap hidden">
             <button id="confirmSingleBtn" class="btn btn-main" type="button">
               이걸로 결정
             </button>
 
-            <!-- 친구가 공유 링크로 들어왔을 때만 노출 예정 -->
+            <!-- 친구가 공유 링크로 들어왔을 때만 노출 -->
             <button id="seeOtherBtn" class="btn btn-sub hidden" type="button">
               다른 후보 보기
             </button>
@@ -118,6 +118,16 @@
           <div id="singleShareWrap" class="share-link-wrap hidden">
             <button id="shareSingleBtn" class="share-link-btn" type="button">
               누가 좀 골라줘
+            </button>
+          </div>
+
+          <!-- 친구 회신 결과 화면 전용 버튼 영역 -->
+          <div id="friendResultWrap" class="single-decision-wrap hidden">
+            <button id="confirmFriendResultBtn" class="btn btn-main" type="button">
+              이걸로 결정
+            </button>
+            <button id="restartFromFriendBtn" class="btn btn-sub" type="button">
+              새로 다시 추천
             </button>
           </div>
 
@@ -167,6 +177,6 @@
     </main>
   </div>
 
-  <script src="./app.js?v=14"></script>
+  <script src="./app.js?v=15"></script>
 </body>
 </html>

@@ -648,6 +648,104 @@ body.doom-shaking {
   transition: transform 0.18s ease, box-shadow 0.18s ease, outline 0.18s ease;
 }
 
+/* =========================
+   Highlight Effect
+========================= */
+.highlight-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+  pointer-events: none;
+  display: block;
+}
+
+.highlight-flash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at center,
+      rgba(255, 245, 200, 0.92) 0%,
+      rgba(255, 214, 120, 0.34) 30%,
+      rgba(255, 170, 80, 0.12) 52%,
+      rgba(0, 0, 0, 0.18) 100%);
+  animation: highlightFlash 0.85s ease-out forwards;
+}
+
+.highlight-rays {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 320px;
+  height: 320px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background:
+    conic-gradient(
+      from 0deg,
+      rgba(255,255,255,0) 0deg 12deg,
+      rgba(255, 225, 120, 0.42) 12deg 24deg,
+      rgba(255,255,255,0) 24deg 36deg,
+      rgba(255, 196, 92, 0.30) 36deg 48deg,
+      rgba(255,255,255,0) 48deg 60deg,
+      rgba(255, 225, 120, 0.42) 60deg 72deg,
+      rgba(255,255,255,0) 72deg 84deg,
+      rgba(255, 196, 92, 0.30) 84deg 96deg,
+      rgba(255,255,255,0) 96deg 108deg,
+      rgba(255, 225, 120, 0.42) 108deg 120deg,
+      rgba(255,255,255,0) 120deg 360deg
+    );
+  filter: blur(1px);
+  opacity: 0;
+  animation: highlightRays 0.95s ease-out forwards;
+}
+
+.highlight-spark {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: radial-gradient(circle, #fff7cf 0%, #ffd66e 55%, rgba(255,214,110,0) 75%);
+  opacity: 0;
+}
+
+.highlight-spark-1 {
+  left: 38%;
+  top: 38%;
+  animation: sparkBurst1 0.9s ease-out forwards;
+}
+
+.highlight-spark-2 {
+  right: 34%;
+  top: 34%;
+  animation: sparkBurst2 0.9s ease-out forwards;
+}
+
+.highlight-spark-3 {
+  left: 48%;
+  bottom: 28%;
+  animation: sparkBurst3 0.9s ease-out forwards;
+}
+
+.result-panel.highlighting {
+  position: relative;
+  animation: resultHighlightPop 0.78s cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+  border-color: #ffd36d;
+  box-shadow:
+    0 0 0 4px rgba(255, 226, 145, 0.45),
+    0 20px 44px rgba(255, 177, 77, 0.28),
+    0 0 34px rgba(255, 211, 109, 0.45);
+}
+
+.result-panel.highlighting .result-food,
+.result-panel.highlighting .result-desc,
+.result-panel.highlighting .result-label {
+  animation: textPopIn 0.55s ease-out;
+}
+
+.mogu-img.highlighting {
+  animation: characterCelebrateJump 0.8s ease-out;
+}
+
 @keyframes glowPulse {
   0% { transform: scale(1); opacity: 0.86; }
   50% { transform: scale(1.05); opacity: 1; }
@@ -695,6 +793,106 @@ body.doom-shaking {
   }
   to {
     opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes highlightFlash {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes highlightRays {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.72) rotate(-18deg);
+  }
+  30% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.18) rotate(18deg);
+  }
+}
+
+@keyframes sparkBurst1 {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) translate(0, 0);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2) translate(-26px, -34px);
+  }
+}
+
+@keyframes sparkBurst2 {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) translate(0, 0);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2) translate(30px, -28px);
+  }
+}
+
+@keyframes sparkBurst3 {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) translate(0, 0);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.15) translate(0, 26px);
+  }
+}
+
+@keyframes resultHighlightPop {
+  0% {
+    transform: scale(0.96);
+  }
+  35% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes textPopIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes characterCelebrateJump {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  30% {
+    transform: translateY(-10px) scale(1.04);
+  }
+  55% {
+    transform: translateY(0) scale(1.02);
+  }
+  100% {
     transform: translateY(0) scale(1);
   }
 }

@@ -30,6 +30,11 @@ const tripleShareWrap = document.getElementById("tripleShareWrap");
 const relayResultBtn = document.getElementById("relayResultBtn");
 const relayResultWrap = document.getElementById("relayResultWrap");
 
+/* 친구 회신 결과 전용 버튼 */
+const friendResultWrap = document.getElementById("friendResultWrap");
+const confirmFriendResultBtn = document.getElementById("confirmFriendResultBtn");
+const restartFromFriendBtn = document.getElementById("restartFromFriendBtn");
+
 /* =========================
    Doom Button Elements
 ========================= */
@@ -213,6 +218,14 @@ function showRelayButton() {
   if (relayResultWrap) relayResultWrap.classList.remove("hidden");
 }
 
+function hideFriendResultButtons() {
+  if (friendResultWrap) friendResultWrap.classList.add("hidden");
+}
+
+function showFriendResultButtons() {
+  if (friendResultWrap) friendResultWrap.classList.remove("hidden");
+}
+
 function clearCelebrateStyle() {
   resultPanel.classList.remove("celebrate");
 }
@@ -228,6 +241,12 @@ function hideChipsAndMainButtons() {
   searchBtn.classList.add("hidden");
 }
 
+function showChipsAndMainButtons() {
+  chipButtons.forEach((btn) => btn.classList.remove("hidden"));
+  thinkBtn.classList.remove("hidden");
+  searchBtn.classList.remove("hidden");
+}
+
 function setMainState() {
   clearCelebrateStyle();
   showSingleView();
@@ -235,6 +254,7 @@ function setMainState() {
   hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
+  hideFriendResultButtons();
   setCharacter("images/mogu-main.png", "오늘도 결정이 어렵지? 모구가 도와줄게!");
   resultLabel.textContent = "오늘의 추천";
   foodName.textContent = "모드를 선택하고 시작해보자";
@@ -252,6 +272,7 @@ function setThinkingState() {
   hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
+  hideFriendResultButtons();
   setCharacter("images/mogu-thinking.png", "음... 오늘은 뭘 먹을까? 같이 좁혀보자!");
   resultLabel.textContent = "고민 중";
   foodName.textContent = "메뉴 고민 중";
@@ -265,6 +286,7 @@ function setLoadingState(customMessage = "모구가 직장인 맞춤 메뉴를 �
   hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
+  hideFriendResultButtons();
   setCharacter("images/mogu-loading.png", customMessage);
   resultLabel.textContent = "검색 중";
   foodName.textContent = "추천 준비 중...";
@@ -276,6 +298,7 @@ function setRecommendState(menu, annoyedText = null) {
   showSingleView();
   hideRelayButton();
   hideSeeOtherButton();
+  hideFriendResultButtons();
   setCharacter("images/mogu-recommend.png", annoyedText || "이 메뉴 어때? 모구의 추천 결과야!");
   resultLabel.textContent = "추천 결과";
   foodName.textContent = menu.name;
@@ -292,6 +315,7 @@ function setTripleCandidates(candidateMenus, annoyedText = null) {
   hideSingleDecisionButton();
   hideSeeOtherButton();
   hideRelayButton();
+  hideFriendResultButtons();
   setCharacter("images/mogu-recommend.png", annoyedText || "좋아, 고민하기 좋게 후보 3개를 준비했어!");
   resultLabel.textContent = "후보 3개";
   if (tripleGuide) {
@@ -334,6 +358,7 @@ function finalizeSelection(menu) {
   hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
+  hideFriendResultButtons();
   setCharacter("images/mogu-celebrate.png", `${menu.name}, 최종 결정 완료! 이제 맛있게 먹기만 하면 돼!`);
   resultLabel.textContent = "최종 선택";
   foodName.textContent = `오늘의 메뉴는 ${menu.name} 입니다`;
@@ -345,6 +370,101 @@ function finalizeSelection(menu) {
   sharedSelectedMenu = menu;
   clearCandidateHighlight();
   hideDoomResult();
+}
+
+function finalizeReplySelection(menu) {
+  isReplySession = false;
+  isSharedSession = false;
+  sharedSelectedMenu = menu;
+  currentSimpleMenu = menu;
+  currentTripleCandidates = [];
+  sharedSingleExpanded = false;
+
+  showChipsAndMainButtons();
+  clearCelebrateStyle();
+  showSingleView();
+  hideSingleDecisionButton();
+  hideSeeOtherButton();
+  hideShareButtons();
+  hideRelayButton();
+  hideFriendResultButtons();
+
+  resultPanel.classList.add("celebrate");
+  setCharacter("images/mogu-celebrate.png", `${menu.name}, 최종 결정 완료! 이제 진짜 점심 먹으러 가자!`);
+  resultLabel.textContent = "최종 선택";
+  foodName.textContent = `오늘의 메뉴는 ${menu.name} 입니다`;
+  foodDesc.textContent = `좋아, ${menu.name}로 확정! 오늘 점심은 이걸로 가자 🎉`;
+
+  rejectCount = 0;
+  lastSuggestionKey = menu.name;
+  hideDoomResult();
+
+  if (doomButton) {
+    doomButton.classList.remove("hidden");
+  }
+
+  window.history.replaceState({}, "", window.location.pathname);
+}
+
+function restartFromReplyResult() {
+  if (!isReplySession) return;
+
+  const filteredMenus = getFilteredMenus();
+  if (filteredMenus.length === 0) {
+    showSingleView();
+    clearCelebrateStyle();
+    hideSingleDecisionButton();
+    hideSeeOtherButton();
+    hideShareButtons();
+    hideRelayButton();
+    hideFriendResultButtons();
+
+    setCharacter("images/mogu-thinking.png", "조건에 맞는 메뉴가 없네. 다른 조건으로 다시 골라보자!");
+    resultLabel.textContent = "조건 재설정";
+    foodName.textContent = "메뉴 없음";
+    foodDesc.textContent = "카테고리를 해제하거나 다른 조건으로 다시 시도해봐.";
+
+    currentSimpleMenu = null;
+    currentTripleCandidates = [];
+    sharedSelectedMenu = null;
+    return;
+  }
+
+  const annoyedText = "친구 의견도 들었고, 새 후보로 다시 간다.";
+  const loadingText = "좋다. 친구가 골라준 것도 봤으니 새 판으로 다시 간다.";
+
+  clearCelebrateStyle();
+  hideSingleDecisionButton();
+  hideSeeOtherButton();
+  hideShareButtons();
+  hideRelayButton();
+  hideFriendResultButtons();
+  clearCandidateHighlight();
+
+  setLoadingState(loadingText);
+
+  setTimeout(() => {
+    if (currentMode === "simple") {
+      const picked = getRandomMenu(filteredMenus);
+      setRecommendState(picked, annoyedText);
+      lastSuggestionKey = picked.name;
+    } else {
+      const pickedMenus = getThreeRandomMenus(filteredMenus);
+      setTripleCandidates(pickedMenus, annoyedText);
+      lastSuggestionKey = pickedMenus.map((m) => m.name).join("|");
+    }
+
+    currentSimpleMenu = currentMode === "simple" ? currentSimpleMenu : null;
+    sharedSelectedMenu = null;
+    sharedSingleExpanded = false;
+    rejectCount = Math.min(rejectCount + 1, 6);
+
+    if (doomButton) {
+      doomButton.classList.remove("hidden");
+    }
+
+    window.history.replaceState({}, "", window.location.pathname);
+  }, 900);
 }
 
 function getFilteredMenus() {
@@ -413,6 +533,7 @@ function activateMode(mode) {
   hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
+  hideFriendResultButtons();
   resultLabel.textContent = "모드 변경";
   foodName.textContent = mode === "simple" ? "심플 모드 선택됨" : "3개 후보 모드 선택됨";
   foodDesc.textContent = mode === "simple"
@@ -445,6 +566,7 @@ function activateCategory(category) {
   hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
+  hideFriendResultButtons();
   setCharacter("images/mogu-thinking.png", `${selectedCategory} 느낌으로 후보를 좁혀볼게!`);
   resultLabel.textContent = "조건 선택";
   foodName.textContent = selectedCategory;
@@ -617,6 +739,7 @@ function enterSharedSingleMode(itemName) {
   hideChipsAndMainButtons();
   hideShareButtons();
   hideRelayButton();
+  hideFriendResultButtons();
   clearCelebrateStyle();
   showSingleView();
 
@@ -653,6 +776,7 @@ function enterSharedTripleMode(itemNames) {
   hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
+  hideFriendResultButtons();
   clearCelebrateStyle();
   showTripleView();
 
@@ -694,6 +818,7 @@ function finalizeSharedSelection(menu) {
   hideSingleDecisionButton();
   hideSeeOtherButton();
   hideShareButtons();
+  hideFriendResultButtons();
   showRelayButton();
   resultPanel.classList.add("celebrate");
   setCharacter("images/mogu-celebrate.png", `대신 골라줬다. 오늘은 ${menu.name}다.`);
@@ -706,9 +831,11 @@ function finalizeSharedSelection(menu) {
   clearCandidateHighlight();
 }
 
-function enterReplyMode(selectedName) {
+function enterReplyMode(selectedName, mode = "single") {
   isReplySession = true;
   isSharedSession = false;
+  currentMode = mode === "triple" ? "triple" : "simple";
+
   const menu = getMenuByName(selectedName);
   currentSimpleMenu = menu;
   currentTripleCandidates = [];
@@ -720,14 +847,16 @@ function enterReplyMode(selectedName) {
   hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
-  clearCelebrateStyle();
   showSingleView();
-  resultPanel.classList.add("celebrate");
+  clearCelebrateStyle();
+  hideFriendResultButtons();
 
+  resultPanel.classList.add("celebrate");
   setCharacter("images/mogu-celebrate.png", `친구가 대신 정해줬다. 오늘은 ${menu.name}다.`);
   resultLabel.textContent = "친구가 골라준 결과";
   foodName.textContent = `오늘의 메뉴는 ${menu.name} 입니다`;
-  foodDesc.textContent = `이제 결론 났다. 오늘은 ${menu.name}(으)로 가면 된다 🎉`;
+  foodDesc.textContent = `친구 의견도 들었다. 이걸로 갈지, 새로 다시 뽑을지 정하면 된다.`;
+  showFriendResultButtons();
 }
 
 function initSharedModeIfNeeded() {
@@ -751,7 +880,7 @@ function initReplyModeIfNeeded() {
   const replyData = parseReplyParams();
   if (!replyData) return false;
 
-  enterReplyMode(replyData.selected);
+  enterReplyMode(replyData.selected, replyData.mode);
   return true;
 }
 
@@ -920,6 +1049,7 @@ async function startDoomDecision() {
     hideSeeOtherButton();
     hideShareButtons();
     hideRelayButton();
+    hideFriendResultButtons();
     resultPanel.classList.add("celebrate");
     setCharacter("images/mogu-celebrate.png", `인류는 멸망하지 않았다. 하지만 오늘은 ${targetMenu.name}다.`);
     resultLabel.textContent = "강제 결정 완료";
@@ -938,6 +1068,7 @@ async function startDoomDecision() {
   hideSeeOtherButton();
   hideShareButtons();
   hideRelayButton();
+  hideFriendResultButtons();
   resultPanel.classList.add("celebrate");
   setCharacter("images/mogu-celebrate.png", `드디어 결정을 포기했군. 오늘은 ${targetMenu.name}다.`);
   resultLabel.textContent = "강제 결정 완료";
@@ -1026,6 +1157,7 @@ searchBtn.addEventListener("click", () => {
     hideSeeOtherButton();
     hideShareButtons();
     hideRelayButton();
+    hideFriendResultButtons();
     setCharacter("images/mogu-thinking.png", "조건에 맞는 메뉴가 없네. 다른 조건으로 다시 골라보자!");
     resultLabel.textContent = "조건 재설정";
     foodName.textContent = "메뉴 없음";
@@ -1110,6 +1242,20 @@ if (relayResultBtn) {
   });
 }
 
+if (confirmFriendResultBtn) {
+  confirmFriendResultBtn.addEventListener("click", () => {
+    if (!isReplySession || !currentSimpleMenu) return;
+    finalizeReplySelection(currentSimpleMenu);
+  });
+}
+
+if (restartFromFriendBtn) {
+  restartFromFriendBtn.addEventListener("click", () => {
+    if (!isReplySession) return;
+    restartFromReplyResult();
+  });
+}
+
 window.addEventListener("load", () => {
   bindDoomButtonEvents();
 
@@ -1125,6 +1271,7 @@ window.addEventListener("load", () => {
     return;
   }
 
+  showChipsAndMainButtons();
   setMainState();
 
   setTimeout(() => {

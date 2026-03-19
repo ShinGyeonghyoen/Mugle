@@ -13,7 +13,7 @@
   />
   <meta name="theme-color" content="#ffb14d" />
   <link rel="manifest" href="./manifest.json" />
-  <link rel="stylesheet" href="./style.css?v=14" />
+  <link rel="stylesheet" href="./style.css?v=20" />
 </head>
 <body>
   <!-- ☢ 지구멸망 버튼 -->
@@ -167,8 +167,63 @@
     <div class="highlight-spark highlight-spark-1"></div>
     <div class="highlight-spark highlight-spark-2"></div>
     <div class="highlight-spark highlight-spark-3"></div>
+    <div class="highlight-spark highlight-spark-4"></div>
+    <div class="highlight-spark highlight-spark-5"></div>
   </div>
 
-  <script src="./app.js?v=16"></script>
+  <!-- 결정 완료 축하 카드 오버레이 -->
+  <div id="celebrateOverlay" class="celebrate-overlay hidden" aria-hidden="true">
+    <div class="celebrate-backdrop"></div>
+
+    <div class="celebrate-stage">
+      <div class="celebrate-aura"></div>
+      <div class="celebrate-star celebrate-star-1">✨</div>
+      <div class="celebrate-star celebrate-star-2">⭐</div>
+      <div class="celebrate-star celebrate-star-3">💛</div>
+      <div class="celebrate-star celebrate-star-4">✨</div>
+      <div class="celebrate-star celebrate-star-5">⭐</div>
+
+      <section id="celebrateCard" class="celebrate-card" aria-label="결정 완료 카드">
+        <div class="celebrate-card__top">
+          <div class="celebrate-badge">Mugle Choice</div>
+          <div class="celebrate-mini-text">오늘의 결정 완료</div>
+        </div>
+
+        <div class="celebrate-card__body">
+          <div class="celebrate-character-wrap">
+            <div class="celebrate-character-glow"></div>
+            <img
+              id="celebrateCharacter"
+              class="celebrate-character"
+              src="./images/mogu-celebrate.png"
+              alt="춤추는 모구"
+            />
+          </div>
+
+          <div class="celebrate-copy">
+            <p id="celebrateEyebrow" class="celebrate-eyebrow">모구가 신나서 춤춘다</p>
+            <h2 id="celebrateMenuName" class="celebrate-menu-name">오늘의 메뉴는 카레!</h2>
+            <p id="celebrateMessage" class="celebrate-message">
+              오늘 점심은 이걸로 확정! 이제 맛있게 먹으러 가자.
+            </p>
+          </div>
+        </div>
+
+        <div class="celebrate-card__actions">
+          <button id="celebrateShareBtn" class="btn btn-main celebrate-btn" type="button">
+            카드 공유하기
+          </button>
+          <button id="celebrateCloseBtn" class="btn btn-sub celebrate-btn" type="button">
+            확인
+          </button>
+          <button id="celebrateRetryBtn" class="celebrate-link-btn" type="button">
+            다시 추천 받기
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="./app.js?v=20"></script>
 </body>
 </html>

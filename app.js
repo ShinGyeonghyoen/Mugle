@@ -92,24 +92,6 @@ let doomProgressTimer = null;
 let doomPressStartedAt = 0;
 let doomLongPressTriggered = false;
 
-/* Dance frame animation */
-const DANCE_FRAMES = [
-  "./images/mogu-dance/1.png",
-  "./images/mogu-dance/2.png",
-  "./images/mogu-dance/3.png",
-  "./images/mogu-dance/4.png",
-  "./images/mogu-dance/5.png",
-  "./images/mogu-dance/6.png",
-  "./images/mogu-dance/7.png",
-  "./images/mogu-dance/8.png",
-  "./images/mogu-dance/9.png"
-];
-
-const DANCE_FRAME_MS = 120;
-let danceInterval = null;
-let danceFrameIndex = 0;
-let danceAssetsPreloaded = false;
-
 const LONG_PRESS_MS = 1400;
 const TAP_THRESHOLD_MS = 250;
 
@@ -198,48 +180,6 @@ const menus = [
   { name: "포케볼", desc: "건강함과 트렌디함을 동시에 챙길 수 있어.", categories: ["가볍게"] },
   { name: "부리또볼", desc: "든든하면서도 조금 다른 메뉴를 먹고 싶을 때 좋아.", categories: ["든든하게"] }
 ];
-
-/* =========================
-   Dance Animation Helpers
-========================= */
-function preloadDanceFrames() {
-  if (danceAssetsPreloaded) return;
-
-  DANCE_FRAMES.forEach((src) => {
-    const img = new Image();
-    img.src = src;
-  });
-
-  danceAssetsPreloaded = true;
-}
-
-function stopDanceAnimation() {
-  if (danceInterval) {
-    clearInterval(danceInterval);
-    danceInterval = null;
-  }
-
-  danceFrameIndex = 0;
-
-  if (celebrateCharacter) {
-    celebrateCharacter.classList.remove("dancing");
-  }
-}
-
-function startDanceAnimation() {
-  if (!celebrateCharacter) return;
-
-  preloadDanceFrames();
-  stopDanceAnimation();
-
-  celebrateCharacter.src = DANCE_FRAMES[0];
-  danceFrameIndex = 1;
-
-  danceInterval = window.setInterval(() => {
-    celebrateCharacter.src = DANCE_FRAMES[danceFrameIndex];
-    danceFrameIndex = (danceFrameIndex + 1) % DANCE_FRAMES.length;
-  }, DANCE_FRAME_MS);
-}
 
 /* =========================
    Basic UI Helpers
@@ -374,7 +314,12 @@ function showCelebrateOverlay(menu, options = {}) {
     celebrateMessage.textContent = messageText;
   }
 
-  startDanceAnimation();
+  if (celebrateCharacter) {
+    celebrateCharacter.src = "./images/mogu-celebrate.png";
+    celebrateCharacter.classList.remove("dancing");
+    void celebrateCharacter.offsetWidth;
+    celebrateCharacter.classList.add("dancing");
+  }
 
   celebrateOverlay.classList.remove("hidden");
   celebrateOverlay.setAttribute("aria-hidden", "false");
@@ -388,7 +333,11 @@ function hideCelebrateOverlay() {
   celebrateOverlay.classList.add("hidden");
   celebrateOverlay.setAttribute("aria-hidden", "true");
   celebrateOpen = false;
-  stopDanceAnimation();
+
+  if (celebrateCharacter) {
+    celebrateCharacter.classList.remove("dancing");
+  }
+
   document.body.style.overflow = "";
 }
 
@@ -1579,10 +1528,10 @@ document.addEventListener("keydown", (event) => {
 });
 
 document.addEventListener("visibilitychange", () => {
-  if (document.hidden) {
-    stopDanceAnimation();
-  } else if (!document.hidden && celebrateOpen) {
-    startDanceAnimation();
+  if (document.hidden && celebrateCharacter) {
+    celebrateCharacter.classList.remove("dancing");
+  } else if (!document.hidden && celebrateOpen && celebrateCharacter) {
+    celebrateCharacter.classList.add("dancing");
   }
 });
 
@@ -1590,7 +1539,6 @@ document.addEventListener("visibilitychange", () => {
    Initial Load
 ========================= */
 window.addEventListener("load", () => {
-  preloadDanceFrames();
   bindDoomButtonEvents();
 
   const enteredReply = initReplyModeIfNeeded();
